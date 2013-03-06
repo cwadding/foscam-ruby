@@ -1,0 +1,40 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: http://my_username:my_password@192.168.0.117/upgrade_htmls.cgi
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      authorization:
+      - Basic Y3dhZGRpbmc6ZnY1MHhFZ0d3Ug==
+      content-length:
+      - '0'
+      accept:
+      - ! '*/*'
+      user-agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      server:
+      - Netwave IP Camera
+      date:
+      - Tue, 13 Nov 2012 05:02:51 GMT
+      content-type:
+      - text/plain
+      content-length:
+      - '26'
+      cache-control:
+      - no-cache
+      connection:
+      - close
+    body:
+      encoding: US-ASCII
+      string: ! 'error: illegal http frame.'
+    http_version: '1.1'
+  recorded_at: Tue, 13 Nov 2012 05:02:51 GMT
+recorded_with: VCR 2.3.0

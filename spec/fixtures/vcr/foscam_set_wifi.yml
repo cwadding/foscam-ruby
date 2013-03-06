@@ -1,0 +1,40 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://my_username:my_password@192.168.0.117/set_wifi.cgi?enable=1&encrypt=1&ssid=my_wireless_ssid&wpa_psk=my_wireless_password
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      authorization:
+      - Basic Y3dhZGRpbmc6ZnY1MHhFZ0d3Ug==
+      accept-encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      accept:
+      - ! '*/*'
+      user-agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      server:
+      - Netwave IP Camera
+      date:
+      - Thu, 13 Dec 2012 00:43:08 GMT
+      content-type:
+      - text/plain
+      content-length:
+      - '22'
+      cache-control:
+      - no-cache
+      connection:
+      - close
+    body:
+      encoding: US-ASCII
+      string: ! 'error: illegal params.'
+    http_version: '1.1'
+  recorded_at: Thu, 13 Dec 2012 00:43:11 GMT
+recorded_with: VCR 2.3.0

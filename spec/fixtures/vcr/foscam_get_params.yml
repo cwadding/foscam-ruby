@@ -1,0 +1,428 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://my_username:my_password@192.168.0.117/get_params.cgi
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      authorization:
+      - Basic Y3dhZGRpbmc6ZnY1MHhFZ0d3Ug==
+      accept-encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      accept:
+      - ! '*/*'
+      user-agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      server:
+      - Netwave IP Camera
+      date:
+      - Tue, 13 Nov 2012 05:02:50 GMT
+      content-type:
+      - text/plain
+      content-length:
+      - '4269'
+      cache-control:
+      - no-cache
+      connection:
+      - close
+    body:
+      encoding: US-ASCII
+      string: ! 'var id=''000DC5D4DC51'';
+
+        var sys_ver=''11.22.2.38'';
+
+        var app_ver=''2.4.18.17'';
+
+        var alias=''R2D2'';
+
+        var now=1352782970;
+
+        var tz=18000;
+
+        var daylight_saving_time=0;
+
+        var ntp_enable=1;
+
+        var ntp_svr=''0.ca.pool.ntp.org'';
+
+        var user1_name=''my_username'';
+
+        var user1_pwd=''my_password'';
+
+        var user1_pri=2;
+
+        var user2_name=''test'';
+
+        var user2_pwd=''test'';
+
+        var user2_pri=1;
+
+        var user3_name='''';
+
+        var user3_pwd='''';
+
+        var user3_pri=0;
+
+        var user4_name='''';
+
+        var user4_pwd='''';
+
+        var user4_pri=0;
+
+        var user5_name='''';
+
+        var user5_pwd='''';
+
+        var user5_pri=0;
+
+        var user6_name='''';
+
+        var user6_pwd='''';
+
+        var user6_pri=0;
+
+        var user7_name='''';
+
+        var user7_pwd='''';
+
+        var user7_pri=0;
+
+        var user8_name='''';
+
+        var user8_pwd='''';
+
+        var user8_pri=0;
+
+        var dev2_alias='''';
+
+        var dev2_host='''';
+
+        var dev2_port=0;
+
+        var dev2_user='''';
+
+        var dev2_pwd='''';
+
+        var dev3_alias='''';
+
+        var dev3_host='''';
+
+        var dev3_port=0;
+
+        var dev3_user='''';
+
+        var dev3_pwd='''';
+
+        var dev4_alias='''';
+
+        var dev4_host='''';
+
+        var dev4_port=0;
+
+        var dev4_user='''';
+
+        var dev4_pwd='''';
+
+        var dev5_alias='''';
+
+        var dev5_host='''';
+
+        var dev5_port=0;
+
+        var dev5_user='''';
+
+        var dev5_pwd='''';
+
+        var dev6_alias='''';
+
+        var dev6_host='''';
+
+        var dev6_port=0;
+
+        var dev6_user='''';
+
+        var dev6_pwd='''';
+
+        var dev7_alias='''';
+
+        var dev7_host='''';
+
+        var dev7_port=0;
+
+        var dev7_user='''';
+
+        var dev7_pwd='''';
+
+        var dev8_alias='''';
+
+        var dev8_host='''';
+
+        var dev8_port=0;
+
+        var dev8_user='''';
+
+        var dev8_pwd='''';
+
+        var dev9_alias='''';
+
+        var dev9_host='''';
+
+        var dev9_port=0;
+
+        var dev9_user='''';
+
+        var dev9_pwd='''';
+
+        var ip=''0.0.0.0'';
+
+        var mask=''0.0.0.0'';
+
+        var gateway=''0.0.0.0'';
+
+        var dns=''0.0.0.0'';
+
+        var port=80;
+
+        var wifi_enable=1;
+
+        var wifi_ssid=''my_wireless_ssid'';
+
+        var wifi_encrypt=3;
+
+        var wifi_defkey=0;
+
+        var wifi_key1='''';
+
+        var wifi_key2='''';
+
+        var wifi_key3='''';
+
+        var wifi_key4='''';
+
+        var wifi_authtype=0;
+
+        var wifi_keyformat=0;
+
+        var wifi_key1_bits=0;
+
+        var wifi_key2_bits=0;
+
+        var wifi_key3_bits=0;
+
+        var wifi_key4_bits=0;
+
+        var wifi_mode=0;
+
+        var wifi_wpa_psk=''my_wireless_password'';
+
+        var pppoe_enable=0;
+
+        var pppoe_user='''';
+
+        var pppoe_pwd='''';
+
+        var upnp_enable=0;
+
+        var ddns_service=0;
+
+        var ddns_user='''';
+
+        var ddns_pwd='''';
+
+        var ddns_host='''';
+
+        var ddns_proxy_svr='''';
+
+        var ddns_proxy_port=0;
+
+        var mail_svr='''';
+
+        var mail_port=0;
+
+        var mail_tls=0;
+
+        var mail_user='''';
+
+        var mail_pwd='''';
+
+        var mail_sender='''';
+
+        var mail_receiver1='''';
+
+        var mail_receiver2='''';
+
+        var mail_receiver3='''';
+
+        var mail_receiver4='''';
+
+        var mail_inet_ip=0;
+
+        var ftp_svr=''192.168.0.148'';
+
+        var ftp_port=21;
+
+        var ftp_user=''my_username'';
+
+        var ftp_pwd=''RscCh63'';
+
+        var ftp_dir=''R2D2'';
+
+        var ftp_mode=1;
+
+        var ftp_upload_interval=0;
+
+        var ftp_filename='''';
+
+        var ftp_numberoffiles=0;
+
+        var ftp_schedule_enable=0;
+
+        var ftp_schedule_sun_0=0;
+
+        var ftp_schedule_sun_1=0;
+
+        var ftp_schedule_sun_2=0;
+
+        var ftp_schedule_mon_0=0;
+
+        var ftp_schedule_mon_1=0;
+
+        var ftp_schedule_mon_2=0;
+
+        var ftp_schedule_tue_0=0;
+
+        var ftp_schedule_tue_1=0;
+
+        var ftp_schedule_tue_2=0;
+
+        var ftp_schedule_wed_0=0;
+
+        var ftp_schedule_wed_1=0;
+
+        var ftp_schedule_wed_2=0;
+
+        var ftp_schedule_thu_0=0;
+
+        var ftp_schedule_thu_1=0;
+
+        var ftp_schedule_thu_2=0;
+
+        var ftp_schedule_fri_0=0;
+
+        var ftp_schedule_fri_1=0;
+
+        var ftp_schedule_fri_2=0;
+
+        var ftp_schedule_sat_0=0;
+
+        var ftp_schedule_sat_1=0;
+
+        var ftp_schedule_sat_2=0;
+
+        var alarm_motion_armed=1;
+
+        var alarm_motion_sensitivity=0;
+
+        var alarm_motion_compensation=0;
+
+        var alarm_input_armed=1;
+
+        var alarm_ioin_level=1;
+
+        var alarm_iolinkage=0;
+
+        var alarm_preset=0;
+
+        var alarm_ioout_level=1;
+
+        var alarm_mail=0;
+
+        var alarm_upload_interval=2;
+
+        var alarm_http=0;
+
+        var alarm_msn=0;
+
+        var alarm_http_url='''';
+
+        var alarm_schedule_enable=1;
+
+        var alarm_schedule_sun_0=0;
+
+        var alarm_schedule_sun_1=4294967264;
+
+        var alarm_schedule_sun_2=16383;
+
+        var alarm_schedule_mon_0=0;
+
+        var alarm_schedule_mon_1=4294967264;
+
+        var alarm_schedule_mon_2=16383;
+
+        var alarm_schedule_tue_0=0;
+
+        var alarm_schedule_tue_1=4294967264;
+
+        var alarm_schedule_tue_2=16383;
+
+        var alarm_schedule_wed_0=0;
+
+        var alarm_schedule_wed_1=4294967264;
+
+        var alarm_schedule_wed_2=16383;
+
+        var alarm_schedule_thu_0=0;
+
+        var alarm_schedule_thu_1=4294967264;
+
+        var alarm_schedule_thu_2=16383;
+
+        var alarm_schedule_fri_0=0;
+
+        var alarm_schedule_fri_1=4294967264;
+
+        var alarm_schedule_fri_2=16383;
+
+        var alarm_schedule_sat_0=0;
+
+        var alarm_schedule_sat_1=4294967264;
+
+        var alarm_schedule_sat_2=16383;
+
+        var decoder_baud=12;
+
+        var msn_user='''';
+
+        var msn_pwd='''';
+
+        var msn_friend1='''';
+
+        var msn_friend2='''';
+
+        var msn_friend3='''';
+
+        var msn_friend4='''';
+
+        var msn_friend5='''';
+
+        var msn_friend6='''';
+
+        var msn_friend7='''';
+
+        var msn_friend8='''';
+
+        var msn_friend9='''';
+
+        var msn_friend10='''';
+
+'
+    http_version: '1.1'
+  recorded_at: Tue, 13 Nov 2012 05:02:50 GMT
+recorded_with: VCR 2.3.0

@@ -1,0 +1,40 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://my_username:my_password@192.168.0.117/set_mail.cgi?port=465&pwd=password&receiver1=receiver@gmail.com&sender=sender@gmail.com&svr=smtp.gmail.com&user=username@gmail.com
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      authorization:
+      - Basic Y3dhZGRpbmc6ZnY1MHhFZ0d3Ug==
+      accept-encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      accept:
+      - ! '*/*'
+      user-agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      server:
+      - Netwave IP Camera
+      date:
+      - Thu, 13 Dec 2012 01:54:09 GMT
+      content-type:
+      - text/plain
+      content-length:
+      - '22'
+      cache-control:
+      - no-cache
+      connection:
+      - close
+    body:
+      encoding: US-ASCII
+      string: ! 'error: illegal params.'
+    http_version: '1.1'
+  recorded_at: Thu, 13 Dec 2012 01:54:08 GMT
+recorded_with: VCR 2.3.0

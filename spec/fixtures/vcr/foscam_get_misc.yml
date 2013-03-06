@@ -1,0 +1,66 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://my_username:my_password@192.168.0.117/get_misc.cgi
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      authorization:
+      - Basic Y3dhZGRpbmc6ZnY1MHhFZ0d3Ug==
+      accept-encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      accept:
+      - ! '*/*'
+      user-agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      server:
+      - Netwave IP Camera
+      date:
+      - Tue, 13 Nov 2012 05:02:51 GMT
+      content-type:
+      - text/plain
+      content-length:
+      - '343'
+      cache-control:
+      - no-cache
+      connection:
+      - close
+    body:
+      encoding: US-ASCII
+      string: ! 'var led_mode=1;
+
+        var ptz_center_onstart=1;
+
+        var ptz_auto_patrol_interval=0;
+
+        var ptz_auto_patrol_type=0;
+
+        var ptz_patrol_h_rounds=2;
+
+        var ptz_patrol_v_rounds=2;
+
+        var ptz_patrol_rate=10;
+
+        var ptz_patrol_up_rate=6;
+
+        var ptz_patrol_down_rate=6;
+
+        var ptz_patrol_left_rate=6;
+
+        var ptz_patrol_right_rate=6;
+
+        var ptz_disable_preset=1;
+
+        var ptz_preset_onstart=0;
+
+'
+    http_version: '1.1'
+  recorded_at: Tue, 13 Nov 2012 05:02:51 GMT
+recorded_with: VCR 2.3.0

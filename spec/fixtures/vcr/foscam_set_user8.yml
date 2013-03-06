@@ -1,0 +1,40 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://my_username:my_password@192.168.0.117/set_users.cgi?pri8=0&pwd7=pass8&user8=user8
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      authorization:
+      - Basic Y3dhZGRpbmc6ZnY1MHhFZ0d3Ug==
+      accept-encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      accept:
+      - ! '*/*'
+      user-agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      server:
+      - Netwave IP Camera
+      date:
+      - Thu, 01 Jan 1970 01:15:00 GMT
+      content-type:
+      - text/plain
+      content-length:
+      - '22'
+      cache-control:
+      - no-cache
+      connection:
+      - close
+    body:
+      encoding: US-ASCII
+      string: ! 'error: illegal params.'
+    http_version: '1.1'
+  recorded_at: Wed, 12 Dec 2012 04:11:14 GMT
+recorded_with: VCR 2.3.0

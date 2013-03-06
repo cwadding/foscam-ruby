@@ -1,0 +1,42 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://my_username:my_password@192.168.0.117/set_datetime.cgi?ntp_enable=1&ntp_svr=0.ca.pool.ntp.org&tz=18000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      authorization:
+      - Basic Y3dhZGRpbmc6ZnY1MHhFZ0d3Ug==
+      accept-encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      accept:
+      - ! '*/*'
+      user-agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      server:
+      - Netwave IP Camera
+      date:
+      - Thu, 01 Jan 1970 00:58:10 GMT
+      content-type:
+      - text/plain
+      content-length:
+      - '4'
+      cache-control:
+      - no-cache
+      connection:
+      - close
+    body:
+      encoding: US-ASCII
+      string: ! 'ok.
+
+'
+    http_version: '1.1'
+  recorded_at: Wed, 12 Dec 2012 03:54:24 GMT
+recorded_with: VCR 2.3.0

@@ -1,0 +1,40 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://my_username:my_password@192.168.0.117/set_forbidden.cgi?schedule_fri_0=95&schedule_fri_1=45&schedule_fri_2=20&schedule_mon_0=95&schedule_mon_1=45&schedule_mon_2=20&schedule_sat_0=95&schedule_sat_1=45&schedule_sat_2=20&schedule_sun_0=95&schedule_sun_1=45&schedule_sun_2=20&schedule_thu_0=95&schedule_thu_1=45&schedule_thu_2=20&schedule_tue_0=95&schedule_tue_1=45&schedule_tue_2=20&schedule_wed_0=95&schedule_wed_1=45&schedule_wed_2=20
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      authorization:
+      - Basic Y3dhZGRpbmc6ZnY1MHhFZ0d3Ug==
+      accept-encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      accept:
+      - ! '*/*'
+      user-agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      server:
+      - Netwave IP Camera
+      date:
+      - Thu, 01 Jan 1970 01:51:09 GMT
+      content-type:
+      - text/plain
+      content-length:
+      - '22'
+      cache-control:
+      - no-cache
+      connection:
+      - close
+    body:
+      encoding: US-ASCII
+      string: ! 'error: illegal params.'
+    http_version: '1.1'
+  recorded_at: Wed, 12 Dec 2012 04:47:25 GMT
+recorded_with: VCR 2.3.0

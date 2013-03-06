@@ -1,0 +1,105 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://my_username:my_password@192.168.0.117/set_misc.cgi?led_mode=0&ptz_auto_patrol_interval=5&ptz_auto_patrol_type=2&ptz_center_onstart=0&ptz_disable_preset=0&ptz_patrol_down_rate=10&ptz_patrol_h_rounds=1&ptz_patrol_left_rate=10&ptz_patrol_rate=20&ptz_patrol_right_rate=10&ptz_patrol_up_rate=10&ptz_patrol_v_rounds=1&ptz_preset_onstart=1
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      authorization:
+      - Basic Y3dhZGRpbmc6ZnY1MHhFZ0d3Ug==
+      accept-encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      accept:
+      - ! '*/*'
+      user-agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      server:
+      - Netwave IP Camera
+      date:
+      - Thu, 01 Jan 1970 00:05:42 GMT
+      content-type:
+      - text/plain
+      content-length:
+      - '4'
+      cache-control:
+      - no-cache
+      connection:
+      - close
+    body:
+      encoding: US-ASCII
+      string: ! 'ok.
+
+'
+    http_version: '1.1'
+  recorded_at: Wed, 12 Dec 2012 03:01:52 GMT
+- request:
+    method: get
+    uri: http://my_username:my_password@192.168.0.117/get_misc.cgi
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      authorization:
+      - Basic Y3dhZGRpbmc6ZnY1MHhFZ0d3Ug==
+      accept-encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      accept:
+      - ! '*/*'
+      user-agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      server:
+      - Netwave IP Camera
+      date:
+      - Thu, 01 Jan 1970 00:05:43 GMT
+      content-type:
+      - text/plain
+      content-length:
+      - '347'
+      cache-control:
+      - no-cache
+      connection:
+      - close
+    body:
+      encoding: US-ASCII
+      string: ! 'var led_mode=0;
+
+        var ptz_center_onstart=0;
+
+        var ptz_auto_patrol_interval=5;
+
+        var ptz_auto_patrol_type=2;
+
+        var ptz_patrol_h_rounds=1;
+
+        var ptz_patrol_v_rounds=1;
+
+        var ptz_patrol_rate=20;
+
+        var ptz_patrol_up_rate=10;
+
+        var ptz_patrol_down_rate=10;
+
+        var ptz_patrol_left_rate=10;
+
+        var ptz_patrol_right_rate=10;
+
+        var ptz_disable_preset=0;
+
+        var ptz_preset_onstart=1;
+
+'
+    http_version: '1.1'
+  recorded_at: Wed, 12 Dec 2012 03:01:52 GMT
+recorded_with: VCR 2.3.0

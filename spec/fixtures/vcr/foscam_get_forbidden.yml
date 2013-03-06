@@ -1,0 +1,84 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://my_username:my_password@192.168.0.117/get_forbidden.cgi
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      authorization:
+      - Basic Y3dhZGRpbmc6ZnY1MHhFZ0d3Ug==
+      accept-encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      accept:
+      - ! '*/*'
+      user-agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      server:
+      - Netwave IP Camera
+      date:
+      - Tue, 13 Nov 2012 05:02:51 GMT
+      content-type:
+      - text/plain
+      content-length:
+      - '485'
+      cache-control:
+      - no-cache
+      connection:
+      - close
+    body:
+      encoding: US-ASCII
+      string: ! 'var schedule_enable=0;
+
+        var schedule_sun_0=0;
+
+        var schedule_sun_1=0;
+
+        var schedule_sun_2=0;
+
+        var schedule_mon_0=0;
+
+        var schedule_mon_1=0;
+
+        var schedule_mon_2=0;
+
+        var schedule_tue_0=0;
+
+        var schedule_tue_1=0;
+
+        var schedule_tue_2=0;
+
+        var schedule_wed_0=0;
+
+        var schedule_wed_1=0;
+
+        var schedule_wed_2=0;
+
+        var schedule_thu_0=0;
+
+        var schedule_thu_1=0;
+
+        var schedule_thu_2=0;
+
+        var schedule_fri_0=0;
+
+        var schedule_fri_1=0;
+
+        var schedule_fri_2=0;
+
+        var schedule_sat_0=0;
+
+        var schedule_sat_1=0;
+
+        var schedule_sat_2=0;
+
+'
+    http_version: '1.1'
+  recorded_at: Tue, 13 Nov 2012 05:02:51 GMT
+recorded_with: VCR 2.3.0
