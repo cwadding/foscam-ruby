@@ -1,6 +1,6 @@
 # Foscam::Ruby
 
-TODO: Write a gem description
+A client library written in ruby to communicate to your [foscam webcam](http://www.foscam.com/) using the [foscam SDK](http://site.usajumping.com/Download/ipcam_cgi_sdk.pdf).
 
 ## Installation
 
@@ -17,8 +17,18 @@ Or install it yourself as:
     $ gem install foscam-ruby
 
 ## Usage
-
-TODO: Write usage instructions here
+    
+    # Connecting to a camera
+    client = Foscam::Client.new(url: http://192.168.0.1/, username: 'admin', password: 'secret')
+    
+    # Capturing the current Image
+    client.snapshot # => 
+    
+    # Controlling the pan or tilt of camera
+    client.decoder_control(:up)
+    client.decoder_control(:stop_up)
+    client.decoder_control(:left)
+    client.decoder_control(:horizontal_patrol)
 
 ## Contributing
 
