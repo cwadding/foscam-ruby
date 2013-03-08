@@ -1,4 +1,7 @@
 # Foscam::Ruby
+[![Gem Version](https://badge.fury.io/rb/foscam-ruby.png)](http://badge.fury.io/rb/foscam-ruby)
+[![Build Status](https://travis-ci.org/cwadding/foscam-ruby.png)](https://travis-ci.org/cwadding/foscam-ruby)
+[![Code Climate](https://codeclimate.com/github/cwadding/foscam-ruby.png)](https://codeclimate.com/github/cwadding/foscam-ruby)
 
 A client library written in ruby to communicate to your [foscam webcam](http://www.foscam.com/) using the [foscam SDK](http://site.usajumping.com/Download/ipcam_cgi_sdk.pdf).
 
