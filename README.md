@@ -1,3 +1,4 @@
+[![Foscam Webcam] (https://ecx.images-amazon.com/images/I/21lv5LoMq-L._SL110_.jpg)] (http://www.amazon.com/gp/product/B006ZP8UOW/ref=as_li_qf_sp_asin_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B006ZP8UOW&linkCode=as2&tag=foscamruby-20)
 # Foscam::Ruby
 [![Gem Version](https://badge.fury.io/rb/foscam-ruby.png)](http://badge.fury.io/rb/foscam-ruby)
 [![Build Status](https://travis-ci.org/cwadding/foscam-ruby.png)](https://travis-ci.org/cwadding/foscam-ruby)
