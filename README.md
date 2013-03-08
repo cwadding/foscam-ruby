@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/cwadding/foscam-ruby.png)](https://travis-ci.org/cwadding/foscam-ruby)
 [![Code Climate](https://codeclimate.com/github/cwadding/foscam-ruby.png)](https://codeclimate.com/github/cwadding/foscam-ruby)
 
-A client library written in ruby to communicate to your [foscam webcam](http://www.foscam.com/) using the [foscam SDK](http://site.usajumping.com/Download/ipcam_cgi_sdk.pdf).
+A client library written in ruby to communicate to your [foscam webcam](http://www.amazon.com/gp/product/B006ZP8UOW/ref=as_li_qf_sp_asin_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B006ZP8UOW&linkCode=as2&tag=foscamruby-20) using the [foscam SDK](http://site.usajumping.com/Download/ipcam_cgi_sdk.pdf).
 
 ## Installation
 
