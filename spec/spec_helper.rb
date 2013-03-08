@@ -2,7 +2,6 @@ require 'rubygems'
 require 'bundler/setup'
 
 require 'vcr'
-# require 'debugger'
 require 'foscam-ruby' # and any other gems you need
 
 FOSCAM_USERNAME = 'my_username'

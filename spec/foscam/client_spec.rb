@@ -4,7 +4,7 @@ describe Foscam::Client do
 					
 	before(:each) do
 		@service = Foscam::Client.new
-		@connection = Faraday.new( url: FOSCAM_URL)
+		@connection = Faraday.new( :url => FOSCAM_URL)
 		@connection.basic_auth(FOSCAM_USERNAME, FOSCAM_PASSWORD)
 		@service.connection = @connection
 	end
@@ -183,21 +183,21 @@ describe Foscam::Client do
 					end
 				end
 				it "returns true when set using a string" do
-					response = @service.camera_control(resolution: "QVGA")
+					response = @service.camera_control(:resolution => "QVGA")
 					response.should be_true
 				end
 				it "returns true when set using a number" do
-					response = @service.camera_control(resolution: 8)
+					response = @service.camera_control(:resolution => 8)
 					response.should be_true
 				end
 			end
 			context "with invalid parameters" do
 				it "raises an exception with invalid number" do
-					expect {@service.camera_control(resolution: 0)}.to raise_error
+					expect {@service.camera_control(:resolution => 0)}.to raise_error
 				end
 
 				it "raises an exception with invalid string" do
-					expect {@service.camera_control(resolution: "XVGA")}.to raise_error
+					expect {@service.camera_control(:resolution => "XVGA")}.to raise_error
 				end
 			end
 		end
@@ -210,17 +210,17 @@ describe Foscam::Client do
 					end
 				end
 				it "returns true" do
-					response = @service.camera_control( brightness: 160)
+					response = @service.camera_control( :brightness => 160)
 					response.should be_true
 				end
 			end
 			context "with invalid parameters" do
 				it "raises an exception when < 0" do
-					expect {@service.camera_control( brightness: -1)}.to raise_error
+					expect {@service.camera_control( :brightness => -1)}.to raise_error
 				end
 
 				it "raises an exception when > 255" do
-					expect {@service.camera_control( brightness: 256)}.to raise_error
+					expect {@service.camera_control( :brightness => 256)}.to raise_error
 				end
 			end			
 		end
@@ -233,17 +233,17 @@ describe Foscam::Client do
 					end
 				end
 				it "returns true" do
-					response = @service.camera_control(contrast: 4)
+					response = @service.camera_control(:contrast => 4)
 					response.should be_true
 				end
 			end
 			context "with invalid parameters" do
 				it "raises an exception when < 0" do
-					expect {@service.camera_control( contrast: -1)}.to raise_error
+					expect {@service.camera_control( :contrast => -1)}.to raise_error
 				end
 
 				it "raises an exception when > 6" do
-					expect {@service.camera_control( contrast: 7)}.to raise_error
+					expect {@service.camera_control( :contrast => 7)}.to raise_error
 				end
 			end
 		end
@@ -256,20 +256,20 @@ describe Foscam::Client do
 					end
 				end
 				it "returns true" do
-					response = @service.camera_control( mode: :outdoor)
+					response = @service.camera_control( :mode => :outdoor)
 					response.should be_true
 				end
 			end
 			context "with invalid parameters" do
 				it "raises an exception when < 0" do
-					expect {@service.camera_control( mode: -1)}.to raise_error
+					expect {@service.camera_control( :mode => -1)}.to raise_error
 				end
 
 				it "raises an exception when > 2" do
-					expect {@service.camera_control( mode: 3)}.to raise_error
+					expect {@service.camera_control( :mode => 3)}.to raise_error
 				end
 				it "raises an exception with an invalid string" do
-					expect {@service.camera_control( mode: "10Hz")}.to raise_error
+					expect {@service.camera_control( :mode => "10Hz")}.to raise_error
 				end
 			end
 		end
@@ -282,20 +282,20 @@ describe Foscam::Client do
 					end
 				end
 				it "returns true" do
-					response = @service.camera_control(flip: "mirror")
+					response = @service.camera_control(:flip => "mirror")
 					response.should be_true
 				end
 			end
 			context "with invalid parameters" do
 				it "raises an exception when < 0" do
-					expect {@service.camera_control(flip: -1)}.to raise_error
+					expect {@service.camera_control(:flip => -1)}.to raise_error
 				end
 
 				it "raises an exception when > 3" do
-					expect {@service.camera_control(flip: 4)}.to raise_error
+					expect {@service.camera_control(:flip => 4)}.to raise_error
 				end
 				it "raises an exception with an invalid string" do
-					expect {@service.camera_control( mode: "diagonal")}.to raise_error
+					expect {@service.camera_control( :mode => "diagonal")}.to raise_error
 				end
 			end
 		end
@@ -308,7 +308,7 @@ describe Foscam::Client do
 				@service.connection = @connection
 			end
 			it "returns a hash of variables" do
-				response = @service.camera_control(brightness: 160)
+				response = @service.camera_control(:brightness => 160)
 				response.should be_false
 			end
 		end
@@ -597,7 +597,7 @@ describe Foscam::Client do
 				end
 			end
 			it "returns a hash of variables" do
-				params = {tz:18000, ntp_enable:1, ntp_svr:"0.ca.pool.ntp.org"}
+				params = {:tz =>18000, :ntp_enable => 1, :ntp_svr => "0.ca.pool.ntp.org"}
 				response = @service.set_datetime(params)
 				response.should be_true
 			end
@@ -605,7 +605,7 @@ describe Foscam::Client do
 
 		context "with invalid parameters" do
 			it "raises an exception when ntp_server more than 64 characters long" do
-				expect {@service.set_datetime(ntp_svr:"012345678901234567890123456789012345678901234567890123456789012345")}.to raise_error
+				expect {@service.set_datetime(:ntp_svr => "012345678901234567890123456789012345678901234567890123456789012345")}.to raise_error
 			end
 		end
 
@@ -628,7 +628,7 @@ describe Foscam::Client do
 		context "with valid parameters" do
 			it "sets user 2 name, password, and privilages" do
 				::VCR.use_cassette("foscam_set_user2") do
-					params = {user2: "user2", pwd2: "pass2", pri2:0}
+					params = {:user2 => "user2", :pwd2 => "pass2", :pri2 => 0}
 					response = @service.set_users(params)
 					response.should be_true
 				end
@@ -636,7 +636,7 @@ describe Foscam::Client do
 
 			it "sets user 3 name, password, and privilages" do
 				::VCR.use_cassette("foscam_set_user3") do
-					params = {user3: "user3", pwd3: "pass3", pri3:0}
+					params = {:user3 => "user3", :pwd3 => "pass3", :pri3 => 0}
 					response = @service.set_users(params)
 					response.should be_true
 				end
@@ -644,7 +644,7 @@ describe Foscam::Client do
 
 			it "sets user 4 name, password, and privilages" do
 				::VCR.use_cassette("foscam_set_user4") do
-					params = {user4: "user4", pwd4: "pass4", pri4:0}
+					params = {:user4 => "user4", :pwd4 => "pass4", :pri4 => 0}
 					response = @service.set_users(params)
 					response.should be_true
 				end
@@ -652,7 +652,7 @@ describe Foscam::Client do
 
 			it "sets user 5 name, password, and privilages" do
 				::VCR.use_cassette("foscam_set_user5") do
-					params = {user5: "user5", pwd4: "pass5", pri5:0}
+					params = {:user5 => "user5", :pwd4 => "pass5", :pri5 => 0}
 					response = @service.set_users(params)
 					response.should be_true
 				end
@@ -660,7 +660,7 @@ describe Foscam::Client do
 
 			it "sets user 6 name, password, and privilages" do
 				::VCR.use_cassette("foscam_set_user6") do
-					params = {user6: "user6", pwd6: "pass6", pri6:0}
+					params = {:user6 => "user6", :pwd6 => "pass6", :pri6 => 0}
 					response = @service.set_users(params)
 					response.should be_true
 				end
@@ -668,7 +668,7 @@ describe Foscam::Client do
 
 			it "sets user 7 name, password, and privilages" do
 				::VCR.use_cassette("foscam_set_user7") do
-					params = {user7: "user7", pwd7: "pass7", pri7:0}
+					params = {:user7 => "user7", :pwd7 => "pass7", :pri7 => 0}
 					response = @service.set_users(params)
 					response.should be_true
 				end
@@ -676,7 +676,7 @@ describe Foscam::Client do
 
 			it "sets user 8 name, password, and privilages" do
 				::VCR.use_cassette("foscam_set_user8") do
-					params = {user8: "user8", pwd7: "pass8", pri8:0}
+					params = {:user8 => "user8", :pwd7 => "pass8", :pri8 => 0}
 					response = @service.set_users(params)
 					response.should be_true
 				end
@@ -727,7 +727,7 @@ describe Foscam::Client do
 				end
 			end
 			it "returns a hash of variables" do
-				params = {ip: "192.168.0.100", mask: "0.0.0.0", gateway: "0.0.0.0", dns: "8.8.8.8", port: "8080"}
+				params = {:ip => "192.168.0.100", :mask => "0.0.0.0", :gateway => "0.0.0.0", :dns => "8.8.8.8", :port => "8080"}
 				response = @service.set_network(params)
 				response.should be_true
 			end
@@ -757,7 +757,7 @@ describe Foscam::Client do
 				end
 			end
 			it "returns a hash of variables" do
-				params = {ssid: "my_wireless_ssid", enable: 1, encrypt: 1, wpa_psk: "my_wireless_password"}
+				params = {:ssid => "my_wireless_ssid", :enable => 1, :encrypt => 1, :wpa_psk => "my_wireless_password"}
 				response = @service.set_wifi(params)
 				response.should be_true
 			end
@@ -789,17 +789,17 @@ describe Foscam::Client do
 				end
 			end
 			it "returns a hash of variables" do
-				params = {enable: 1, user: "root", pwd: "pass"}
+				params = {:enable => 1, :user => "root", :pwd => "pass"}
 				response = @service.set_pppoe(params)
 				response.should be_true
 			end
 		end
 		context "with invalid parameters" do
 			it "raises an exception when username is more than 40 characters long" do
-				expect {@service.set_pppoe(user: "01234567890123456789012345678901234567891")}.to raise_error
+				expect {@service.set_pppoe(:user => "01234567890123456789012345678901234567891")}.to raise_error
 			end
 			it "raises an exception when password is more than 20 characters long" do
-				expect {@service.set_pppoe(pwd: "012345678901234567890")}.to raise_error
+				expect {@service.set_pppoe(:pwd => "012345678901234567890")}.to raise_error
 			end
 		end
 		context "response is unsuccessful" do
@@ -855,23 +855,23 @@ describe Foscam::Client do
 				end
 			end
 			it "returns a hash of variables" do
-				params = {service: 3, user: "root", pwd: "password", host: "hostname.dyndns.com"}
+				params = {:service => 3, :user => "root", :pwd => "password", :host => "hostname.dyndns.com"}
 				response = @service.set_ddns(params)
 				response.should be_true
 			end
 		end
 		context "with invalid parameters" do
 			it "raises an exception when username is more than 20 characters long" do
-				expect {@service.set_ddns(user: "012345678901234567890")}.to raise_error
+				expect {@service.set_ddns(:user => "012345678901234567890")}.to raise_error
 			end
 			it "raises an exception when password is more than 20 characters long" do
-				expect {@service.set_ddns(pwd: "012345678901234567890")}.to raise_error
+				expect {@service.set_ddns(:pwd => "012345678901234567890")}.to raise_error
 			end
 			it "raises an exception when proxy_svr is more than 20 characters long" do
-				expect {@service.set_ddns(proxy_svr: "012345678901234567890")}.to raise_error
+				expect {@service.set_ddns(:proxy_svr => "012345678901234567890")}.to raise_error
 			end
 			it "raises an exception when host is more than 40 characters long" do
-				expect {@service.set_ddns(host: "01234567890123456789012345678901234567890")}.to raise_error
+				expect {@service.set_ddns(:host => "01234567890123456789012345678901234567890")}.to raise_error
 			end
 		end
 		context "response is unsuccessful" do
@@ -898,7 +898,7 @@ describe Foscam::Client do
 				end
 			end
 			it "returns a hash of variables" do
-				params = {svr:"192.168.0.116", port:21, user:"my_username", pwd:"my_password", dir:"R2D2", upload_interval: 3600}
+				params = {:svr => "192.168.0.116", :port => 21, :user => "my_username", :pwd =>"my_password", :dir => "R2D2", :upload_interval => 3600}
 				response = @service.set_ftp(params)
 				response.should be_true
 			end
@@ -928,17 +928,17 @@ describe Foscam::Client do
 				end
 			end
 			it "returns a hash of variables" do
-				params = {svr:"smtp.gmail.com", port: 465, user: "username@gmail.com", pwd:"password", sender: "sender@gmail.com", receiver1: "receiver@gmail.com"}
+				params = {:svr => "smtp.gmail.com", :port => 465, :user => "username@gmail.com", :pwd =>"password", :sender => "sender@gmail.com", :receiver1 => "receiver@gmail.com"}
 				response = @service.set_mail(params)
 				response.should be_true
 			end
 		end
 		context "with invalid parameters" do
 			it "raises an exception when username is more than 20 characters long" do
-				expect {@service.set_mail(user: "012345678901234567890")}.to raise_error
+				expect {@service.set_mail(:user => "012345678901234567890")}.to raise_error
 			end
 			it "raises an exception when password is more than 20 characters long" do
-				expect {@service.set_mail(pwd: "012345678901234567890")}.to raise_error
+				expect {@service.set_mail(:pwd => "012345678901234567890")}.to raise_error
 			end
 		end
 		context "response is unsuccessful" do
@@ -966,7 +966,7 @@ describe Foscam::Client do
 				end
 			end
 			it "returns a hash of variables" do
-				params = {motion_armed: 0, motion_sensitivity:3, input_armed: 0, iolinkage: 0, mail:0, upload_interval:0}
+				params = {:motion_armed => 0, :motion_sensitivity => 3, :input_armed => 0, :iolinkage => 0, :mail => 0, :upload_interval => 0}
 				response = @service.set_alarm(params)
 				response.should be_true
 			end
@@ -997,7 +997,7 @@ describe Foscam::Client do
 				end
 			end
 			it "returns a hash of variables" do
-				params = {port:0, baud: 15, bytes: "dsfds", data:"url_code"}
+				params = {:port => 0, :baud => 15, :bytes => "dsfds", :data => "url_code"}
 				response = @service.comm_write(params)
 				response.should be_true
 			end
@@ -1028,13 +1028,13 @@ describe Foscam::Client do
 			end
 			it "returns a hash of variables" do
 				params = {
-					schedule_sun_0: 95, schedule_sun_1: 45, schedule_sun_2: 20,
-					schedule_mon_0: 95, schedule_mon_1: 45, schedule_mon_2: 20,
-					schedule_tue_0: 95, schedule_tue_1: 45, schedule_tue_2: 20,
-					schedule_wed_0: 95, schedule_wed_1: 45, schedule_wed_2: 20,
-					schedule_thu_0: 95, schedule_thu_1: 45, schedule_thu_2: 20,
-					schedule_fri_0: 95, schedule_fri_1: 45, schedule_fri_2: 20,
-					schedule_sat_0: 95, schedule_sat_1: 45, schedule_sat_2: 20
+					:schedule_sun_0 => 95, :schedule_sun_1 => 45, :schedule_sun_2 => 20,
+					:schedule_mon_0 => 95, :schedule_mon_1 => 45, :schedule_mon_2 => 20,
+					:schedule_tue_0 => 95, :schedule_tue_1 => 45, :schedule_tue_2 => 20,
+					:schedule_wed_0 => 95, :schedule_wed_1 => 45, :schedule_wed_2 => 20,
+					:schedule_thu_0 => 95, :schedule_thu_1 => 45, :schedule_thu_2 => 20,
+					:schedule_fri_0 => 95, :schedule_fri_1 => 45, :schedule_fri_2 => 20,
+					:schedule_sat_0 => 95, :schedule_sat_1 => 45, :schedule_sat_2 => 20
 				}
 				response = @service.set_forbidden(params)
 				response.should be_true
@@ -1138,15 +1138,15 @@ describe Foscam::Client do
 			end
 
 			it "raises an exception when password is more than 20 characters long" do
-				expect {@service.set_misc(pwd: "012345678901234567890")}.to raise_error
+				expect {@service.set_misc(:pwd => "012345678901234567890")}.to raise_error
 			end
 
 			it "raises an exception if there is no match for the led_mode" do
-				expect {@service.set_misc(led_mode: :mode5)}.to raise_error
+				expect {@service.set_misc(:led_mode => :mode5)}.to raise_error
 			end
 
 			it "raises an exception if there is no match for the ptz_auto_patrol_type" do
-				expect {@service.set_misc(ptz_auto_patrol_type: :vert)}.to raise_error
+				expect {@service.set_misc(:ptz_auto_patrol_type => :vert)}.to raise_error
 			end
 
 		end

@@ -60,29 +60,30 @@ module Foscam
 	CAMERA_CONTROL_RESOLUTION = CAMERA_PARAMS_RESOLUTION.inject({}){|memo,(k,v)| memo[v.to_sym] = k; memo}
 
 	CAMERA_CONTROLS = {
-		resolution: 0,
-		brightness: 1,
-		contrast: 2,
-		mode: 3,
-		flip: 5
+		:resolution => 0,
+		:brightness => 1,
+		:contrast 	=> 2,
+		:mode 		=> 3,
+		:flip 		=> 5
 	}
 
 	DECODER_CONTROLS = {
-		up: 0,
-		stop_up: 1,
-		down: 2,
-		stop_down: 3,
-		left: 4,
-		stop_left: 5,
-		right: 6,
-		stop_right: 7,
-		center: 25,
-		vertical_patrol: 26,
-		stop_vertical_patrol: 27,
-		horizon_patrol: 28,
-		stop_horizon_patrol: 29,
-		io_output_high: 94,
-		io_output_low: 95,
+		:up  => 0,
+		:stop => 1,
+		:stop_up => 1,
+		:down => 2,
+		:stop_down => 3,
+		:left => 4,
+		:stop_left => 5,
+		:right => 6,
+		:stop_right => 7,
+		:center => 25,
+		:vertical_patrol => 26,
+		:stop_vertical_patrol => 27,
+		:horizon_patrol => 28,
+		:stop_horizon_patrol => 29,
+		:io_output_high => 94,
+		:io_output_low => 95,
 	}
 
 	USER_PERMISSIONS = {
@@ -134,7 +135,7 @@ module Foscam
 			@url = url
 			@username = username
 			@password = password
-			@connection = Faraday.new( url: @url) unless @url.nil?
+			@connection = Faraday.new( :url => @url) unless @url.nil?
 			@connection.basic_auth(@username, @password) unless @username.nil? && @password.nil?
 		end
 
