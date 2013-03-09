@@ -270,7 +270,7 @@ http_interactions:
 
         var ftp_user=''my_username'';
 
-        var ftp_pwd=''RscCh63'';
+        var ftp_pwd=''secret'';
 
         var ftp_dir=''R2D2'';
 
