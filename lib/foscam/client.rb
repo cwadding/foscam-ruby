@@ -1,5 +1,6 @@
 module Foscam
 
+	# DDNS_STATUS
 	DDNS_STATUS = {
 		0 => "No Action",
 		1 => "It's connecting...",
@@ -21,6 +22,7 @@ module Foscam
 		17 => "Oray Succeed"
 	}
 
+	# UPNP_STATUS
 	UPNP_STATUS = {
 		0 => "No Action",
 		1 => "Succeed",
@@ -30,19 +32,24 @@ module Foscam
 		5 => "Rejected by UPnP Device, Maybe Port Conflict"
 	}
 
+	# ALARM_STATUS
 	ALARM_STATUS = {
 		0 => "No alarm",
 		1 => "Motion alarm",
 		2 => "Input Alarm"
 	}
 
+	# CAMERA_PARAMS_MODE
 	CAMERA_PARAMS_MODE = {
 		0 => "50hz",
 		1 => "60hz",
 		2 => "outdoor"
 	}
+
+	# CAMERA_CONTROL_MODE
 	CAMERA_CONTROL_MODE = CAMERA_PARAMS_MODE.inject({}){|memo,(k,v)| memo[v.to_sym] = k; memo}
 
+	# CAMERA_PARAMS_ORIENTATION
 	CAMERA_PARAMS_ORIENTATION = {
 		0 => "default",
 		1 => "flip",
@@ -50,15 +57,19 @@ module Foscam
 		3 => "flip+mirror"
 	}
 
+	# CAMERA_CONTROL_ORIENTATION
 	CAMERA_CONTROL_ORIENTATION = CAMERA_PARAMS_ORIENTATION.inject({}){|memo,(k,v)| memo[v.to_sym] = k; memo}
 
+	# CAMERA_PARAMS_RESOLUTION
 	CAMERA_PARAMS_RESOLUTION = {
 		8 => "qvga",
 		32 => "vga"
 	}
 
+	# CAMERA_CONTROL_RESOLUTION
 	CAMERA_CONTROL_RESOLUTION = CAMERA_PARAMS_RESOLUTION.inject({}){|memo,(k,v)| memo[v.to_sym] = k; memo}
 
+	# CAMERA_CONTROLS
 	CAMERA_CONTROLS = {
 		:resolution => 0,
 		:brightness => 1,
@@ -67,6 +78,7 @@ module Foscam
 		:flip 		=> 5
 	}
 
+	# DECODER_CONTROLS
 	DECODER_CONTROLS = {
 		:up  => 0,
 		:stop => 1,
@@ -86,26 +98,35 @@ module Foscam
 		:io_output_low => 95,
 	}
 
+	# USER_PERMISSIONS
 	USER_PERMISSIONS = {
 		0 => :visitor,
 		1 => :operator,
 		2 => :administrator
 	}
 
+	# PTZ_AUTO_PATROL_TYPE
 	PTZ_AUTO_PATROL_TYPE = {
 		0 => :none,
 		1 => :horizontal,
 		2 => :vertical,
 		3 => :"horizontal+vertical"
 	}
+
+	# PTZ_AUTO_PATROL_TYPE_ID
 	PTZ_AUTO_PATROL_TYPE_ID = PTZ_AUTO_PATROL_TYPE.invert
 
+	# LED_MODE
 	LED_MODE = {
 		0 => :mode1,
 		1 => :mode2,
 		2 => :disabled
 	}
+
+	# LED_MODE_ID
 	LED_MODE_ID = LED_MODE.invert
+	
+	# DECODER_BAUD
 	DECODER_BAUD = {
 		9 => :B1200,
 		11 => :B2400,
@@ -116,13 +137,26 @@ module Foscam
 		4097 => :B57600,
 		4098 => :B115200
 	}
-
+	# DECODER_BAUD_ID
 	DECODER_BAUD_ID = DECODER_BAUD.invert
 
-
+	# TODO: put in some documentation for this class
 	class Client
 
-		attr_accessor :url, :username, :password, :connection
+
+		# @!attribute [rw] url
+		#   @return [String] the url to the camera
+		attr_accessor :url
+		# @!attribute [rw] username
+		#   @return [String] The username for authentication to the camera
+		attr_accessor :username
+		# @!attribute [rw] password
+		#   @return [String] The password for authentication to the camera
+		attr_accessor :password
+		
+		# @!attribute [rw] connection
+		#   @return [Faraday] The HTTP connection object to the camera		
+		attr_accessor :connection
 
 		def initialize(args = {})
 			@url = args.delete(:url)
@@ -168,10 +202,10 @@ module Foscam
 		# @see UPNP_STATUS
 		# @see ALARM_STATUS
 		# @return [Hash] The cameras status
-		# 	* :now [DateTime] The current time on the camera
-		# 	* :alarm_status [String] Returns an Alarm status
-		# 	* :ddns_status [String] Returns an UPNP status
-		# 	* :upnp_status [String] Returns an DDNS status
+		# 	* :now (DateTime) The current time on the camera
+		# 	* :alarm_status (String) Returns an Alarm status
+		# 	* :ddns_status (String) Returns an UPNP status
+		# 	* :upnp_status (String) Returns an DDNS status
 		def get_status
 			response = @connection.get('get_status.cgi')
 			response = response.success? ? parse_response(response) : {}
@@ -191,11 +225,11 @@ module Foscam
 		# @see CAMERA_PARAMS_MODE
 		# @see CAMERA_PARAMS_RESOLUTION
 		# @return [Hash] The cameras parameters
-		# 	* :flip [String] The camera orientation.
-		# 	* :mode [String] The camera mode.
-		# 	* :resolution [String] The camera resolution.
-		# 	* :brightness [Fixnum] The camera brightness.
-		# 	* :contrast [Fixnum] The camera contrast.
+		# 	* :flip (String) The camera orientation.
+		# 	* :mode (String) The camera mode.
+		# 	* :resolution (String) The camera resolution.
+		# 	* :brightness (Fixnum) The camera brightness.
+		# 	* :contrast (Fixnum) The camera contrast.
 		def get_camera_params
 			response = @connection.get('get_camera_params.cgi')
 			response = response.success? ? parse_response(response) : {}
@@ -306,154 +340,154 @@ module Foscam
 		##
 		# Returns all the parameters for the camera
 		# @return [Hash] If the request is unsuccessful the hash will be empty. Otherwise it contains the following fields:
-		# 	* [String] :id The device id.
-		# 	* [String] :sys_ver Firmware version number.
-		# 	* [String] :resolution Web UI version number.
-		# 	* [String] :alias The assigned camera name.
-		# 	* [DateTime] :now The camera's time.
-		# 	* [String] :tz The camera time zone.
-		# 	* [FalseClass, TrueClass] :ntp_enable Whether the ntp server is enabled.
-		# 	* [String] :ntp_svr Address to the ntp server.
-		# 	* [String] :user1_name Username of user1.
-		# 	* [String] :user1_pwd Password of user1.
-		# 	* [String] :user1_pri Privilages of user1.
+		# 	* :id (String) The device id.
+		# 	* :sys_ver (String) Firmware version number.
+		# 	* :resolution (String) Web UI version number.
+		# 	* :alias (String) The assigned camera name.
+		# 	* :now (DateTime) The camera's time.
+		# 	* :tz (String) The camera time zone.
+		# 	* :ntp_enable (FalseClass, TrueClass) Whether the ntp server is enabled.
+		# 	* :ntp_svr (String) Address to the ntp server.
+		# 	* :user1_name (String) Username of user1.
+		# 	* :user1_pwd (String) Password of user1.
+		# 	* :user1_pri (String) Privilages of user1.
 		# 	* ...
-		# 	* [String] :user8_name Username of user8.
-		# 	* [String] :user8_pwd Password of user8.
-		# 	* [String] :user8_pri Privilages of user8.
-		# 	* [String] :dev2_alias] The 2nd Device alias 
-		# 	* [String] :dev2_host The 2nd Device host(IP or Domain name) 
-		# 	* [String] :dev2_port The 2nd Device port.
-		# 	* [String] :dev2_user The 2nd Device user name .
-		# 	* [String] :dev2_pwd The 2nd Device password.
+		# 	* :user8_name (String) Username of user8.
+		# 	* :user8_pwd (String) Password of user8.
+		# 	* :user8_pri (String) Privilages of user8.
+		# 	* :dev2_alias (String) The 2nd Device alias 
+		# 	* :dev2_host (String) The 2nd Device host(IP or Domain name) 
+		# 	* :dev2_port (String) The 2nd Device port.
+		# 	* :dev2_user (String) The 2nd Device user name .
+		# 	* :dev2_pwd (String) The 2nd Device password.
 		# 	* ...
-		# 	* [String] :dev9_alias The 9th Device alias 
-		# 	* [String] :dev9_host The 9th Device host(IP or Domain name) 
-		# 	* [Fixnum] :dev9_port The 9th Device port.
-		# 	* [String] :dev9_user The 9th Device user name .
-		# 	* [String] :dev9_pwd The 9th Device password.
-		# 	* [String] :ip_address The network ip address of the camera.
-		# 	* [String] :mask The network mask of the camera.
-		# 	* [String] :gateway The network gateway of the camera.
-		# 	* [String] :dns The address of the dns server.
-		# 	* [Fixnum] :port The network port.
-		# 	* [FalseClass, TrueClass] :wifi_enable Whether wifi is enabled or not.
-		# 	* [String] :wifi_ssid Your WIFI SSID 
-		# 	* [FalseClass, TrueClass] :wifi_encrypt Whether wifi is encrypted or not.
-		# 	* [String] :wifi_defkey Wep Default TX Key 
-		# 	* [String] :wifi_key1 Key1 
-		# 	* [String] :wifi_key2 Key2 
-		# 	* [String] :wifi_key3 Key3 
-		# 	* [String] :wifi_key4 Key4 
-		# 	* [String] :wifi_authtype The Authetication type 0:open 1:share
-		# 	* [String] :wifi_keyformat Keyformat 0:Hex 1:ASCII 
-		# 	* [String] :wifi_key1_bits 0:64 bits; 1:128 bits 
-		# 	* [String] :wifi_key2_bits 0:64 bits; 1:128 bits 
-		# 	* [String] :wifi_key3_bits 0:64 bits; 1:128 bits 
-		# 	* [String] :wifi_key4_bits 0:64 bits; 1:128 bits 
-		# 	* [String] :wifi_channel Channel (default 6) 
-		# 	* [String] :wifi_mode Mode (default 0) 
-		# 	* [String] :wifi_wpa_psk wpa_psk
-		# 	* [FalseClass, TrueClass] :pppoe_enable 
-        # 	* [String] :pppoe_user
-        # 	* [String] :pppoe_pwd
-        # 	* [FalseClass, TrueClass] :upnp_enable
-        # 	* [String] :ddns_service
-        # 	* [String] :ddns_user
-        # 	* [String] :ddns_pwd
-        # 	* [String] :ddns_host
-        # 	* [String] :ddns_proxy_svr
-        # 	* [Fixnum] :ddns_proxy_port
-        # 	* [String] :mail_svr
-        # 	* [Fixnum] :mail_port 
-        # 	* [String] :mail_tls
-        # 	* [String] :mail_user
-        # 	* [String] :mail_pwd
-        # 	* [String] :mail_sender
-        # 	* [String] :mail_receiver1
-        # 	* [String] :mail_receiver2
-        # 	* [String] :mail_receiver3
-        # 	* [String] :mail_receiver4
-        # 	* [String] :mail_inet_ip
-        # 	* [String] :ftp_svr 
-        # 	* [String] :ftp_port 
-        # 	* [String] :ftp_user 
-        # 	* [String] :ftp_pwd 
-        # 	* [String] :ftp_dir 
-        # 	* [String] :ftp_mode 
-        # 	* [String] :ftp_upload_interval 
-        # 	* [String] :ftp_filename 
-        # 	* [Fixnum] :ftp_numberoffiles
-        # 	* [FalseClass, TrueClass] :ftp_schedule_enable 
-        # 	* [Fixnum] :ftp_schedule_sun_0 
-        # 	* [Fixnum] :ftp_schedule_sun_1 
-        # 	* [Fixnum] :ftp_schedule_sun_2 
-        # 	* [Fixnum] :ftp_schedule_mon_0 
-        # 	* [Fixnum] :ftp_schedule_mon_1 
-        # 	* [Fixnum] :ftp_schedule_mon_2 
-        # 	* [Fixnum] :ftp_schedule_tue_0 
-        # 	* [Fixnum] :ftp_schedule_tue_1 
-        # 	* [Fixnum] :ftp_schedule_tue_2 
-        # 	* [Fixnum] :ftp_schedule_wed_0 
-        # 	* [Fixnum] :ftp_schedule_wed_1 
-        # 	* [Fixnum] :ftp_schedule_wed_2 
-        # 	* [Fixnum] :ftp_schedule_thu_0 
-        # 	* [Fixnum] :ftp_schedule_thu_1 
-        # 	* [Fixnum] :ftp_schedule_thu_2 
-        # 	* [Fixnum] :ftp_schedule_fri_0 
-        # 	* [Fixnum] :ftp_schedule_fri_1 
-        # 	* [Fixnum] :ftp_schedule_fri_2 
-        # 	* [Fixnum] :ftp_schedule_sat_0 
-        # 	* [Fixnum] :ftp_schedule_sat_1 
-        # 	* [Fixnum] :ftp_schedule_sat_2 
-        # 	* [FalseClass, TrueClass] :alarm_motion_armed
-        # 	* [Fixnum] :alarm_motion_sensitivity
-        # 	* [Fixnum] :alarm_motion_compensation 
-        # 	* [FalseClass, TrueClass] :alarm_input_armed 
-        # 	* [Fixnum] :alarm_ioin_level 
-        # 	* [Fixnum] :alarm_iolinkage 
-        # 	* [Fixnum] :alarm_preset 
-        # 	* [Fixnum] :alarm_ioout_level 
-        # 	* [FalseClass, TrueClass] :alarm_mail 
-        # 	* [Fixnum] :alarm_upload_interval 
-        # 	* [FalseClass, TrueClass] :alarm_http
-        # 	* [FalseClass, TrueClass] :alarm_msn
-        # 	* [String] :alarm_http_url
-        # 	* [FalseClass, TrueClass] :alarm_schedule_enable
-        # 	* [Fixnum] :alarm_schedule_sun_0 
-        # 	* [Fixnum] :alarm_schedule_sun_1 
-        # 	* [Fixnum] :alarm_schedule_sun_2 
-        # 	* [Fixnum] :alarm_schedule_mon_0 
-        # 	* [Fixnum] :alarm_schedule_mon_1 
-        # 	* [Fixnum] :alarm_schedule_mon_2 
-        # 	* [Fixnum] :alarm_schedule_tue_0 
-        # 	* [Fixnum] :alarm_schedule_tue_1 
-        # 	* [Fixnum] :alarm_schedule_tue_2 
-        # 	* [Fixnum] :alarm_schedule_wed_0 
-        # 	* [Fixnum] :alarm_schedule_wed_1 
-        # 	* [Fixnum] :alarm_schedule_wed_2 
-        # 	* [Fixnum] :alarm_schedule_thu_0 
-        # 	* [Fixnum] :alarm_schedule_thu_1 
-        # 	* [Fixnum] :alarm_schedule_thu_2 
-        # 	* [Fixnum] :alarm_schedule_fri_0 
-        # 	* [Fixnum] :alarm_schedule_fri_1 
-        # 	* [Fixnum] :alarm_schedule_fri_2 
-        # 	* [Fixnum] :alarm_schedule_sat_0 
-        # 	* [Fixnum] :alarm_schedule_sat_1 
-        # 	* [Fixnum] :alarm_schedule_sat_2 
-        # 	* [Fixnum] :decoder_baud 
-        # 	* [String] :msn_user
-        # 	* [String] :msn_pwd
-        # 	* [String] :msn_friend1
-        # 	* [String] :msn_friend2
-        # 	* [String] :msn_friend3
-        # 	* [String] :msn_friend4
-        # 	* [String] :msn_friend5
-        # 	* [String] :msn_friend6
-        # 	* [String] :msn_friend7
-        # 	* [String] :msn_friend8
-        # 	* [String] :msn_friend9
-        # 	* [String] :msn_friend10
+		# 	* :dev9_alias (String) The 9th Device alias 
+		# 	* :dev9_host (String) The 9th Device host(IP or Domain name) 
+		# 	* :dev9_port (Fixnum) The 9th Device port.
+		# 	* :dev9_user (String) The 9th Device user name .
+		# 	* :dev9_pwd (String) The 9th Device password.
+		# 	* :ip_address (String) The network ip address of the camera.
+		# 	* :mask (String) The network mask of the camera.
+		# 	* :gateway (String) The network gateway of the camera.
+		# 	* :dns (String) The address of the dns server.
+		# 	* :port (Fixnum) The network port.
+		# 	* :wifi_enable (FalseClass, TrueClass) Whether wifi is enabled or not.
+		# 	* :wifi_ssid (String) Your WIFI SSID 
+		# 	* :wifi_encrypt (FalseClass, TrueClass) Whether wifi is encrypted or not.
+		# 	* :wifi_defkey (String) Wep Default TX Key 
+		# 	* :wifi_key1 (String) Key1 
+		# 	* :wifi_key2 (String) Key2 
+		# 	* :wifi_key3 (String) Key3 
+		# 	* :wifi_key4 (String) Key4 
+		# 	* :wifi_autht (String) ype The Authetication type 0:open 1:share
+		# 	* :wifi_keyfo (String) rmat Keyformat 0:Hex 1:ASCII 
+		# 	* :wifi_key1_bits (String) 0:64 bits; 1:128 bits 
+		# 	* :wifi_key2_bits (String) 0:64 bits; 1:128 bits 
+		# 	* :wifi_key3_bits (String) 0:64 bits; 1:128 bits 
+		# 	* :wifi_key4_bits (String) 0:64 bits; 1:128 bits 
+		# 	* :wifi_channel (String) Channel (default 6) 
+		# 	* :wifi_mode (String) Mode (default 0) 
+		# 	* :wifi_wpa_psk (String) wpa_psk
+		# 	* :pppoe_enable (FalseClass, TrueClass)
+		# 	* :pppoe_user (String)
+		# 	* :pppoe_pwd (String)
+		# 	* :upnp_enable (FalseClass, TrueClass)
+		# 	* :ddns_service (String)
+		# 	* :ddns_user (String)
+		# 	* :ddns_pwd (String)
+		# 	* :ddns_host (String)
+		# 	* :ddns_proxy_svr (String)
+		# 	* :ddns_proxy_port (Fixnum)
+		# 	* :mail_svr (String)
+		# 	* :mail_port  (Fixnum)
+		# 	* :mail_tls (String)
+		# 	* :mail_user (String)
+		# 	* :mail_pwd (String)
+		# 	* :mail_sender (String)
+		# 	* :mail_receiver1 (String)
+		# 	* :mail_receiver2 (String)
+		# 	* :mail_receiver3 (String)
+		# 	* :mail_receiver4 (String)
+		# 	* :mail_inet_ip (String)
+		# 	* :ftp_svr  (String)
+		# 	* :ftp_port  (String)
+		# 	* :ftp_user  (String)
+		# 	* :ftp_pwd  (String)
+		# 	* :ftp_dir  (String)
+		# 	* :ftp_mode  (String)
+		# 	* :ftp_upload_interval  (String)
+		# 	* :ftp_filename  (String)
+		# 	* :ftp_numberoffiles (Fixnum)
+		# 	* :ftp_schedule_enable (FalseClass, TrueClass)
+		# 	* :ftp_schedule_sun_0 (Fixnum)
+		# 	* :ftp_schedule_sun_1 (Fixnum)
+		# 	* :ftp_schedule_sun_2 (Fixnum)
+		# 	* :ftp_schedule_mon_0 (Fixnum)
+		# 	* :ftp_schedule_mon_1 (Fixnum)
+		# 	* :ftp_schedule_mon_2 (Fixnum)
+		# 	* :ftp_schedule_tue_0 (Fixnum)
+		# 	* :ftp_schedule_tue_1 (Fixnum)
+		# 	* :ftp_schedule_tue_2 (Fixnum)
+		# 	* :ftp_schedule_wed_0 (Fixnum)
+		# 	* :ftp_schedule_wed_1 (Fixnum)
+		# 	* :ftp_schedule_wed_2 (Fixnum)
+		# 	* :ftp_schedule_thu_0 (Fixnum)
+		# 	* :ftp_schedule_thu_1 (Fixnum)
+		# 	* :ftp_schedule_thu_2 (Fixnum)
+		# 	* :ftp_schedule_fri_0 (Fixnum)
+		# 	* :ftp_schedule_fri_1 (Fixnum)
+		# 	* :ftp_schedule_fri_2 (Fixnum)
+		# 	* :ftp_schedule_sat_0 (Fixnum)
+		# 	* :ftp_schedule_sat_1 (Fixnum)
+		# 	* :ftp_schedule_sat_2 (Fixnum)
+		# 	* :alarm_motion_armed (FalseClass, TrueClass)
+		# 	* :alarm_motion_sensitivity (Fixnum)
+		# 	* :alarm_motion_compensation  (Fixnum)
+		# 	* :alarm_input_armed  (FalseClass, TrueClass]
+		# 	* :alarm_ioin_level  (Fixnum)
+		# 	* :alarm_iolinkage  (Fixnum)
+		# 	* :alarm_preset  (Fixnum)
+		# 	* :alarm_ioout_level  (Fixnum)
+		# 	* :alarm_mail (FalseClass, TrueClass)
+		# 	* :alarm_upload_interval (Fixnum)
+		# 	* :alarm_http (FalseClass, TrueClass)
+		# 	* :alarm_msn (FalseClass, TrueClass)
+		# 	* :alarm_http_url (String)
+		# 	* :alarm_schedule_enable (FalseClass, TrueClass)
+		# 	* :alarm_schedule_sun_0 (Fixnum)
+		# 	* :alarm_schedule_sun_1 (Fixnum)
+		# 	* :alarm_schedule_sun_2 (Fixnum)
+		# 	* :alarm_schedule_mon_0 (Fixnum)
+		# 	* :alarm_schedule_mon_1 (Fixnum)
+		# 	* :alarm_schedule_mon_2 (Fixnum)
+		# 	* :alarm_schedule_tue_0 (Fixnum)
+		# 	* :alarm_schedule_tue_1 (Fixnum)
+		# 	* :alarm_schedule_tue_2 (Fixnum)
+		# 	* :alarm_schedule_wed_0 (Fixnum)
+		# 	* :alarm_schedule_wed_1 (Fixnum)
+		# 	* :alarm_schedule_wed_2 (Fixnum)
+		# 	* :alarm_schedule_thu_0 (Fixnum)
+		# 	* :alarm_schedule_thu_1 (Fixnum)
+		# 	* :alarm_schedule_thu_2 (Fixnum)
+		# 	* :alarm_schedule_fri_0 (Fixnum)
+		# 	* :alarm_schedule_fri_1 (Fixnum)
+		# 	* :alarm_schedule_fri_2 (Fixnum)
+		# 	* :alarm_schedule_sat_0 (Fixnum)
+		# 	* :alarm_schedule_sat_1 (Fixnum)
+		# 	* :alarm_schedule_sat_2 (Fixnum)
+		# 	* :decoder_baud (Fixnum)
+		# 	* :msn_user (String)
+		# 	* :msn_pwd (String)
+		# 	* :msn_friend1 (String)
+		# 	* :msn_friend2 (String)
+		# 	* :msn_friend3 (String)
+		# 	* :msn_friend4 (String)
+		# 	* :msn_friend5 (String)
+		# 	* :msn_friend6 (String)
+		# 	* :msn_friend7 (String)
+		# 	* :msn_friend8 (String)
+		# 	* :msn_friend9 (String)
+		# 	* :msn_friend10 (String) 
 		def get_params
 			response = @connection.get("get_params.cgi")
 			response = response.success? ? parse_response(response) : {}
@@ -564,8 +598,8 @@ module Foscam
 		# Set the pppoe parameters
 		# @param [Hash] params
 		# @option params [FalseClass, TrueClass] :enable 
-        # @option params [String] :user
-        # @option params [String] :pwd
+		# @option params [String] :user 
+		# @option params [String] :pwd 
 		# @return [FalseClass,TrueClass] whether the request was successful.
 		def set_pppoe(params)
 			throw "invalid parameter value" if params.has_key?(:user) && params[:user].length > 20
@@ -574,11 +608,24 @@ module Foscam
 			response.success?
 		end
 
+		##
+		# Enable or disable upnp
+		# @param [FalseClass, TrueClass] flag A boolean for whether to enable or disable upnp.
+		# @return [FalseClass,TrueClass] whether the request was successful.
 		def set_upnp(flag)
 			response = @connection.get("set_upnp.cgi?enable=#{handle_boolean(flag)}")
 			response.success?
 		end
 
+
+		##
+		# Set the ddns parameters
+		# @param [Hash] params
+		# @option params [String] :user
+		# @option params [String] :pwd
+		# @option params [String] :host
+		# @option params [String] :service
+		# @return [FalseClass,TrueClass] whether the request was successful.
 		def set_ddns(params)
 			throw "invalid parameter value" if params.has_key?(:user) && params[:user].length > 20
 			throw "invalid parameter value" if params.has_key?(:pwd) && params[:pwd].length > 20
@@ -587,11 +634,34 @@ module Foscam
 			response.success?
 		end
 
+		##
+		# Set the ftp parameters
+		# @param [Hash] params
+		# @option params [String] :dir
+		# @option params [String] :user
+		# @option params [String] :pwd
+		# @option params [String] :svr
+		# @option params [Fixnum] :port
+		# @option params [Fixnum] :upload_interval in seconds
+		# @return [FalseClass,TrueClass] whether the request was successful.
 		def set_ftp(params)
 			response = @connection.get("set_ftp.cgi?#{params.to_query}")
 			response.success?
 		end
 
+		##
+		# Set the smtp server mail notification parameters
+		# @param [Hash] params
+		# @option params [String] :user must be less than 20 characters
+		# @option params [String] :pwd must be less than 20 characters
+		# @option params [String] :svr
+		# @option params [Fixnum] :port
+		# @option params [String] :sender must be less than 40 characters
+		# @option params [String] :receiver1 must be less than 40 characters
+		# @option params [String] :receiver2 must be less than 40 characters
+		# @option params [String] :receiver3 must be less than 40 characters
+		# @option params [String] :receiver4 must be less than 40 characters
+		# @return [FalseClass,TrueClass] whether the request was successful.
 		def set_mail(params)
 			throw "invalid parameter value" if params.has_key?(:user) && params[:user].length > 20
 			throw "invalid parameter value" if params.has_key?(:pwd) && params[:pwd].length > 20
@@ -602,26 +672,110 @@ module Foscam
 			response.success?
 		end
 
+		##
+		# Set alarm parameters
+		# @param [Hash] params
+		# @option params [TrueClass, FalseClass] :motion_armed Whether the motion is enabled or disabled
+		# @option params [TrueClass, FalseClass] :input_armed Whether the motion is enabled or disabled
+		# @option params [TrueClass, FalseClass] :mail whether to send email on alarm
+		# @option params [TrueClass, FalseClass] :iolinkage whether to send email on alarm        
+		# @option params [Fixnum] :motion_sensitivity 
+		# @option params [Fixnum] :upload_interval in seconds
+		# @return [FalseClass,TrueClass] whether the request was successful.
 		def set_alarm(params)
 			response = @connection.get("set_alarm.cgi?#{params.to_query}")
 			response.success?
 		end
 
+		##
+		# Write to comm
+		# @param [Hash] params
+		# @option params [Fixnum] :baud
+		# @option params [String] :bytes
+		# @option params [String] :data
+		# @option params [Fixnum] :port
+		# @return [FalseClass,TrueClass] whether the request was successful.
 		def comm_write(params)
 			response = @connection.get("comm_write.cgi?#{params.to_query}")
 			response.success?
 		end
 
+		##
+		# Set Forbidden
+		# @param [Hash] params
+		# @option params [Fixnum] :schedule_fri_0
+		# @option params [Fixnum] :schedule_fri_1
+		# @option params [Fixnum] :schedule_fri_2
+		# @option params [Fixnum] :schedule_mon_0
+		# @option params [Fixnum] :schedule_mon_1
+		# @option params [Fixnum] :schedule_mon_2
+		# @option params [Fixnum] :schedule_sat_0
+		# @option params [Fixnum] :schedule_sat_1
+		# @option params [Fixnum] :schedule_sat_2
+		# @option params [Fixnum] :schedule_sun_0
+		# @option params [Fixnum] :schedule_sun_1
+		# @option params [Fixnum] :schedule_sun_2
+		# @option params [Fixnum] :schedule_thu_0
+		# @option params [Fixnum] :schedule_thu_1
+		# @option params [Fixnum] :schedule_thu_2
+		# @option params [Fixnum] :schedule_tue_0
+		# @option params [Fixnum] :schedule_tue_1
+		# @option params [Fixnum] :schedule_tue_2
+		# @option params [Fixnum] :schedule_wed_0
+		# @option params [Fixnum] :schedule_wed_1
+		# @option params [Fixnum] :schedule_wed_2
+		# @return [FalseClass,TrueClass] whether the request was successful.
 		def set_forbidden(params)
 			response = @connection.get("set_forbidden.cgi?#{params.to_query}")
 			response.success?
 		end
 
+		##
+		# Returns the forbidden schedule for the camera
+		# @return [Hash] If the request is unsuccessful the hash will be empty. Otherwise it contains the following fields:
+		# 	* :schedule_sun_0 (Fixnum)
+		# 	* :schedule_sun_1 (Fixnum)
+		# 	* :schedule_sun_2 (Fixnum)
+		# 	* :schedule_mon_0 (Fixnum)
+		# 	* :schedule_mon_1 (Fixnum)
+		# 	* :schedule_mon_2 (Fixnum)
+		# 	* :schedule_tue_0 (Fixnum)
+		# 	* :schedule_tue_1 (Fixnum)
+		# 	* :schedule_tue_2 (Fixnum)
+		# 	* :schedule_wed_0 (Fixnum)
+		# 	* :schedule_wed_1 (Fixnum)
+		# 	* :schedule_wed_2 (Fixnum)
+		# 	* :schedule_thu_0 (Fixnum)
+		# 	* :schedule_thu_1 (Fixnum)
+		# 	* :schedule_thu_2 (Fixnum)
+		# 	* :schedule_fri_0 (Fixnum)
+		# 	* :schedule_fri_1 (Fixnum)
+		# 	* :schedule_fri_2 (Fixnum)
+		# 	* :schedule_sat_0 (Fixnum)
+		# 	* :schedule_sat_1 (Fixnum)
+		# 	* :schedule_sat_2 (Fixnum)
 		def get_forbidden
 			response = @connection.get("get_forbidden.cgi")
 			response.success? ? parse_response(response) : {}
 		end
 
+		##
+		# Set miscellaneous parameters 
+		# @param [Hash] params
+		# @option params [Fixnum] :led_mode
+		# @option params [Fixnum] :ptz_auto_patrol_interval
+		# @option params [Fixnum] :ptz_auto_patrol_type
+		# @option params [Fixnum] :ptz_patrol_down_rate
+		# @option params [Fixnum] :ptz_patrol_h_rounds
+		# @option params [Fixnum] :ptz_patrol_left_rate
+		# @option params [Fixnum] :ptz_patrol_rate
+		# @option params [Fixnum] :ptz_patrol_right_rate
+		# @option params [Fixnum] :ptz_patrol_up_rate
+		# @option params [Fixnum] :ptz_patrol_v_rounds
+		# @option params [FalseClass,TrueClass] :ptz_preset_onstart
+		# @option params [FalseClass,TrueClass] :ptz_center_onstart
+		# @option params [FalseClass,TrueClass] :ptz_disable_preset
+		# @return [FalseClass,TrueClass] whether the request was successful.
 		def set_misc(params)
 			url_params = params.clone
 			[:ptz_patrol_rate, :ptz_patrol_up_rate, :ptz_patrol_down_rate, :ptz_patrol_left_rate, :ptz_patrol_right_rate].each do |key|
@@ -639,6 +793,23 @@ module Foscam
 			response.success?
 		end
 
+
+		##
+		# Get miscellaneous parameters
+		# @return [Hash] If the request is unsuccessful the hash will be empty. Otherwise it contains the following fields:
+		# 	* :led_mode (Fixnum)
+		# 	* :ptz_auto_patrol_interval (Fixnum)
+		# 	* :ptz_auto_patrol_type (Fixnum)
+		# 	* :ptz_patrol_down_rate (Fixnum)
+		# 	* :ptz_patrol_h_rounds (Fixnum)
+		# 	* :ptz_patrol_left_rate (Fixnum)
+		# 	* :ptz_patrol_rate (Fixnum)
+		# 	* :ptz_patrol_right_rate (Fixnum)
+		# 	* :ptz_patrol_up_rate (Fixnum)
+		# 	* :ptz_patrol_v_rounds (Fixnum)
+		# 	* :ptz_preset_onstart (FalseClass,TrueClass)
+		# 	* :ptz_center_onstart (FalseClass,TrueClass)
+		# 	* :ptz_disable_preset (FalseClass,TrueClass)
 		def get_misc
 			response = @connection.get("get_misc.cgi")
 			response = response.success? ? parse_response(response) : {}
@@ -656,6 +827,11 @@ module Foscam
 			response
 		end
 
+
+		##
+		# Set decoder baud 
+		# @param [String,Symbol] baud
+		# @return [FalseClass,TrueClass] whether the request was successful.
 		def set_decoder(baud)
 			baud = DECODER_BAUD_ID[baud.to_sym] if baud.is_a?(String) || baud.is_a?(Symbol)
 			response = @connection.get("set_decoder.cgi?baud=#{baud}")
