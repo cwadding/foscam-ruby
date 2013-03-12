@@ -213,7 +213,7 @@ module Foscam
 				response[:ddns_status] = DDNS_STATUS[response[:ddns_status].to_i]
 				response[:upnp_status] = UPNP_STATUS[response[:upnp_status].to_i]
 				response[:alarm_status] = ALARM_STATUS[response[:alarm_status].to_i]
-				response[:now] = DateTime.strptime(response[:now],'%s')
+				response[:now] = ::DateTime.strptime(response[:now],'%s')
 			end
 			response
 		end
@@ -492,7 +492,7 @@ module Foscam
 			response = @connection.get("get_params.cgi")
 			response = response.success? ? parse_response(response) : {}
 			unless response.empty?
-				response[:now] = DateTime.strptime(response[:now],'%s')
+				response[:now] = ::DateTime.strptime(response[:now],'%s')
 				[:ntp_enable, :wifi_enable, :pppoe_enable, :upnp_enable, :alarm_schedule_enable, :ftp_schedule_enable].each do |field|
 					response[field] = response[field].to_i > 0
 				end
