@@ -68,9 +68,11 @@ module Foscam
 				# Check if it is a Hash
 				# get the parameters and set them to the attributes
 				# @connection = ::Foscam::Client.new(params)
-				params.each do |attr, value|
-					self.public_send("#{attr}=", value)
-				end if params
+				run_callbacks :initialize do
+					params.each do |attr, value|
+						self.public_send("#{attr}=", value)
+					end if params
+				end
 				# Check if it is a Foscam::Client
 			end
 

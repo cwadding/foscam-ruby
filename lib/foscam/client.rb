@@ -28,7 +28,6 @@ module Foscam
 
 		##
 		# Connects to the foscam webcam
-
 		# @param url [String] The address to your camera
 		# @param username [String] username to authorize with the camera
 		# @param password [String] password to authorize with the camera

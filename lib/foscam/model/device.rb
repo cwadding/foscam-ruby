@@ -1,4 +1,4 @@
-require 'singleton'
+
 module Foscam
 	module Model
 		class Device
@@ -63,7 +63,9 @@ module Foscam
 				# Check if it is a Hash
 				# get the parameters and set them to the attributes
 				run_callbacks :initialize do
-					connect(params)
+					params.each do |attr, value|
+						self.public_send("#{attr}=", value)
+					end if params
 				end
 				# Check if it is a Foscam::Client
 			end
@@ -106,11 +108,6 @@ module Foscam
 			def action(value)
 				# have an action map to map some subset to the foscam set
 				@client.decoder_control(value)
-			end
-
-			#:nodoc
-			def persisted?
-				true
 			end
 
 			private
