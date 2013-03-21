@@ -1,25 +1,12 @@
 module Foscam
 	module Model
-		class User
+		class User < Base
 			
 			# Max number of users supported by foscam
 			MAX_NUMBER = 8
 
-			# the Foscam client connection
-			cattr_accessor :connection
-
-			include ::ActiveModel::Dirty
-			include ::ActiveModel::Validations
-			include ::ActiveModel::Conversion
-			extend ::ActiveModel::Callbacks
-			extend ::ActiveModel::Naming
-			extend ::ActiveModel::Translation
-
 			# :nodoc
 			define_model_callbacks :save, :create, :destroy
-
-			# :nodoc
-			define_model_callbacks :initialize, :only => [:after]
 			
 			##
 			# @!attribute [r] id
@@ -57,30 +44,13 @@ module Foscam
 			def privilege=(val)
 				privilege_will_change! unless val == @privilege
 				@privilege = val
-			end				
-
-			##
-			# @param params [Hash] User attributes
-			# @option params [String] :username
-			# @option params [String] :password
-			# @option params [Symbol] :privilege
-			def initialize(params ={})
-				# Check if it is a Hash
-				# get the parameters and set them to the attributes
-				# @connection = ::Foscam::Client.new(params)
-				run_callbacks :initialize do
-					params.each do |attr, value|
-						self.public_send("#{attr}=", value)
-					end if params
-				end
-				# Check if it is a Foscam::Client
 			end
 
 			##
 			# Get all the users
 			# @return [Array] of Users
 			def self.all
-				cam_params = connection.get_params
+				cam_params = client.get_params
 				users = []
 				unless cam_params.empty?
 					(1..8).each do |i|
@@ -114,7 +84,7 @@ module Foscam
 			def self.find(id)
 				user = nil
 				if id > 0 && id <= MAX_NUMBER
-					cam_params = connection.get_params
+					cam_params = client.get_params
 					if !cam_params.empty? && !cam_params["user#{id}_name".to_sym].empty?
 						user = User.new(:username => cam_params["user#{id}_name".to_sym], :password => cam_params["user#{id}_pwd".to_sym], :privilege => cam_params["user#{id}_pri".to_sym])
 						user.instance_variable_set(:@id, id)
@@ -129,7 +99,7 @@ module Foscam
 			# @return [FalseClass, TrueClass] Whether or not the user was successfully deleted
 			def self.delete(id)
 				params = {"user#{id}".to_sym => "", "pwd#{id}".to_sym => "", "pri#{id}".to_sym => 0}
-				id > 0 && id <= MAX_NUMBER ? connection.set_users(params) : false
+				id > 0 && id <= MAX_NUMBER ? client.set_users(params) : false
 			end
 
 
@@ -142,7 +112,7 @@ module Foscam
 					if changed? && is_valid? && set_id
 						@previously_changed = changes
 						# Get the first user that is not taken
-						flag = connection.set_users(dirty_params_hash)
+						flag = client.set_users(dirty_params_hash)
 						@changed_attributes.clear if flag
 					end
 					flag
@@ -165,15 +135,10 @@ module Foscam
 					self.username = ""
 					self.password = ""
 					self.privilege = 0
-					flag = @id.nil? ? false : connection.set_users(dirty_params_hash)
+					flag = @id.nil? ? false : client.set_users(dirty_params_hash)
 					@changed_attributes.clear
 					flag
 				end
-			end
-
-			#:nodoc
-			def persisted?
-				true
 			end
 
 			private
@@ -189,7 +154,7 @@ module Foscam
 			def set_id
 				flag = false
 				if @id.nil?
-					cam_params = connection.get_params
+					cam_params = client.get_params
 					unless cam_params.empty?
 						(1..8).each do |i|
 							if cam_params["user#{i}_name".to_sym].empty?

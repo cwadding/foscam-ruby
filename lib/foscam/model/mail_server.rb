@@ -1,14 +1,8 @@
 module Foscam
 	module Model
-		class MailServer
+		class MailServer < Base
 
 			include Singleton
-			include ::ActiveModel::Dirty
-			include ::ActiveModel::Validations
-			include ::ActiveModel::Conversion
-			extend ::ActiveModel::Callbacks
-			extend ::ActiveModel::Naming
-			extend ::ActiveModel::Translation
 
 			class Recipient
 
@@ -40,9 +34,8 @@ module Foscam
 			end
 
 			define_model_callbacks :save, :clear
-			define_model_callbacks :initialize, :only => [:after]
 
-			attr_reader :username, :password, :address, :port, :sender, :recipients, :client
+			attr_reader :username, :password, :address, :port, :sender, :recipients
 
 
 			def sender=(val)
@@ -72,8 +65,8 @@ module Foscam
 
 			def client=(obj)
 				unless obj.nil?
-					@client = obj
-					params = @client.get_params
+					MailServer::client = obj
+					params = client.get_params
 					unless params.empty?
 						self.sender = params[:mail_sender]
 						self.address = params[:mail_svr]
@@ -90,29 +83,12 @@ module Foscam
 
 			define_attribute_methods [:username, :password, :address, :port, :sender]
 
-			def initialize(params = {})
-				run_callbacks :initialize do
-					params.each do |attr, value|
-						self.public_send("#{attr}=", value)
-					end if params
-				end
-			end
-
-			##
-			# Connects to the foscam webcam
-			# @param url [String] The address to your camera
-			# @param username [String] username to authorize with the camera
-			# @param password [String] password to authorize with the camera
-			def connect(params)
-				client = ::Foscam::Client.new(params) if params.has_key?(:url)
-			end
-
 			def save
 				run_callbacks :save do
 					flag = false
 					if changed? && is_valid?
 						@previously_changed = changes
-						flag = @client.set_mail(dirty_params_hash)
+						flag = client.set_mail(dirty_params_hash)
 						@changed_attributes.clear if flag
 					end
 					flag
@@ -123,7 +99,7 @@ module Foscam
 				run_callbacks :clear do
 					flag = false
 					params = {:sender => "", :user => "", :pwd => "", :svr => "", :port => 21, :receiver1 => "", :receiver2 => "", :receiver3 => "", :receiver4 => ""}
-					flag = @client.set_mail(params)
+					flag = client.set_mail(params)
 					@changed_attributes.clear if flag
 					flag
 				end

@@ -32,22 +32,14 @@
 
 module Foscam
 	module Model
-		class FtpServer
+		class FtpServer < Base
 
 			include Singleton
-			include ::ActiveModel::Dirty
-			include ::ActiveModel::Validations
-			include ::ActiveModel::Conversion
-			extend ::ActiveModel::Callbacks
-			extend ::ActiveModel::Naming
-			extend ::ActiveModel::Translation
-
 
 
 			define_model_callbacks :save, :clear
-			define_model_callbacks :initialize, :only => [:after]
 
-			attr_reader :dir, :username, :password, :address, :port, :upload_interval, :client
+			attr_reader :dir, :username, :password, :address, :port, :upload_interval
 
 
 			def dir=(val)
@@ -83,8 +75,8 @@ module Foscam
 
 			def client=(obj)
 				unless obj.nil?
-					@client = obj
-					params = @client.get_params
+					FtpServer::client = obj
+					params = client.get_params
 					unless params.empty?
 						self.dir = params[:ftp_dir]
 						self.address = params[:ftp_svr]
@@ -98,30 +90,12 @@ module Foscam
 
 			define_attribute_methods [:dir, :username, :password, :address, :port, :upload_interval]
 
-			def initialize(params = {})
-				run_callbacks :initialize do
-					params.each do |attr, value|
-						self.public_send("#{attr}=", value)
-					end if params
-				end
-
-			end
-
-			##
-			# Connects to the foscam webcam
-			# @param url [String] The address to your camera
-			# @param username [String] username to authorize with the camera
-			# @param password [String] password to authorize with the camera
-			def connect(params)
-				client = ::Foscam::Client.new(params) if params.has_key?(:url)
-			end
-
 			def save
 				run_callbacks :save do
 					flag = false
 					if changed? && is_valid?
 						@previously_changed = changes
-						flag = @client.set_ftp(dirty_params_hash)
+						flag = client.set_ftp(dirty_params_hash)
 						@changed_attributes.clear if flag
 					end
 					flag
@@ -132,7 +106,7 @@ module Foscam
 				run_callbacks :clear do
 					flag = false
 					params = {:dir => "", :user => "", :pwd => "", :svr => "", :port => 21, :upload_interval => 0}
-					flag = @client.set_ftp(params)
+					flag = client.set_ftp(params)
 					@changed_attributes.clear if flag
 					flag
 				end

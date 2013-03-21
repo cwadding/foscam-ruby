@@ -1,20 +1,13 @@
 
 module Foscam
 	module Model
-		class Device
+		class Device < Base
 			include Singleton
-			include ::ActiveModel::Dirty
-			include ::ActiveModel::Validations
-			include ::ActiveModel::Conversion
-			extend ::ActiveModel::Callbacks
-			extend ::ActiveModel::Naming
-			extend ::ActiveModel::Translation
 
 			define_model_callbacks :save
-			define_model_callbacks :initialize, :only => [:after]
 
 			# attr_accessor :name (get_params, set_alias)
-			attr_reader :resolution, :brightness, :contrast, :orientation, :client
+			attr_reader :resolution, :brightness, :contrast, :orientation
 
 			def resolution=(val)
 				resolution_will_change! unless val == @resolution
@@ -38,8 +31,8 @@ module Foscam
 
 			def client=(obj)
 				unless obj.nil?
-					@client = obj
-					cam_params = @client.get_camera_params
+					Device::client = obj
+					cam_params = client.get_camera_params
 					unless cam_params.empty?
 						@resolution = cam_params[:resolution]
 						@brightness = cam_params[:brightness]
@@ -52,33 +45,6 @@ module Foscam
 
 			define_attribute_methods [:resolution, :brightness, :contrast, :orientation]
 
-
-			##
-			# @param params [Hash] Device attributes
-			# @option params [Fixnum] :resolution
-			# @option params [Fixnum] :brightness
-			# @option params [Fixnum] :contrast
-			# @option params [String] :orientation
-			def initialize(params ={})
-				# Check if it is a Hash
-				# get the parameters and set them to the attributes
-				run_callbacks :initialize do
-					params.each do |attr, value|
-						self.public_send("#{attr}=", value)
-					end if params
-				end
-				# Check if it is a Foscam::Client
-			end
-
-			##
-			# Connects to the foscam webcam
-			# @param url [String] The address to your camera
-			# @param username [String] username to authorize with the camera
-			# @param password [String] password to authorize with the camera
-			def connect(params)
-				client = ::Foscam::Client.new(params) if params.has_key?(:url)
-			end
-
 			##
 			# Save the current device
 			# @return [FalseClass, TrueClass] Whether or not the device was successfully saved
@@ -87,7 +53,7 @@ module Foscam
 					flag = false
 					if changed? && is_valid?
 						@previously_changed = changes
-						flag = @client.camera_control(dirty_params_hash)
+						flag = client.camera_control(dirty_params_hash)
 						@changed_attributes.clear if flag
 					end
 					flag
@@ -98,7 +64,7 @@ module Foscam
 			# Capture the current image
 			# @return [nil, ::MiniMagick::Image]
 			def capture
-				@client.snapshot
+				client.snapshot
 			end
 
 			##
@@ -107,7 +73,7 @@ module Foscam
 			# @return [FalseClass,TrueClass] whether the request was successful.
 			def action(value)
 				# have an action map to map some subset to the foscam set
-				@client.decoder_control(value)
+				client.decoder_control(value)
 			end
 
 			private

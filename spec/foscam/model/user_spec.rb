@@ -38,7 +38,7 @@ describe Foscam::Model::User do
 		it "returns an array of all the users" do
 			@client.stub(:get_params).and_return(all_users_response)
 			@client.should_receive(:get_params).once
-			Foscam::Model::User.connection = @client
+			Foscam::Model::User.client = @client
 			users = Foscam::Model::User.all
 			users.count.should == 8
 			index = 1
@@ -73,7 +73,7 @@ describe Foscam::Model::User do
 			context "with valid id" do
 				it "returns the desired user by id" do
 					@client.should_receive(:get_params).once
-					Foscam::Model::User.connection = @client
+					Foscam::Model::User.client = @client
 					user = Foscam::Model::User.find(1)
 					user.should be_an_instance_of(Foscam::Model::User)
 					user.id.should == 1
@@ -88,7 +88,7 @@ describe Foscam::Model::User do
 			context "with valid id" do
 				it "returns a nil object" do
 					@client.should_receive(:get_params).once
-					Foscam::Model::User.connection = @client
+					Foscam::Model::User.client = @client
 					user = Foscam::Model::User.find(2)
 					user.should be_nil
 				end
@@ -96,7 +96,7 @@ describe Foscam::Model::User do
 			context "with invalid id" do
 				it "returns a nil object" do
 					@client.should_not_receive(:get_params)
-					Foscam::Model::User.connection = @client
+					Foscam::Model::User.client = @client
 					user = Foscam::Model::User.find(10)
 					user.should be_nil
 				end
@@ -110,7 +110,7 @@ describe Foscam::Model::User do
 				params = {:user1 => "", :pwd1 => "", :pri1 => 0}
 				@client.stub(:set_users).with(params).and_return(true)
 				@client.should_receive(:set_users).with(params).once
-				Foscam::Model::User.connection = @client
+				Foscam::Model::User.client = @client
 				flag = Foscam::Model::User.delete(1)
 				flag.should be_true
 			end
@@ -118,7 +118,7 @@ describe Foscam::Model::User do
 		context "with invalid id" do
 			it "deletes the desired user" do
 				@client.should_not_receive(:set_users)
-				Foscam::Model::User.connection = @client
+				Foscam::Model::User.client = @client
 				flag = Foscam::Model::User.delete(10)
 				flag.should be_false
 			end
@@ -147,7 +147,7 @@ describe Foscam::Model::User do
 							@client.stub(:set_users).and_return(true)
 						end
 						it "updates the user attributes that changed" do
-							Foscam::Model::User.connection = @client						
+							Foscam::Model::User.client = @client						
 							flag = @user.save
 							flag.should be_true
 						end
@@ -157,7 +157,7 @@ describe Foscam::Model::User do
 							@client.stub(:set_users).and_return(false)
 						end
 						it "fails to update the user attributes" do							
-							Foscam::Model::User.connection = @client
+							Foscam::Model::User.client = @client
 							flag = @user.save
 							flag.should be_false
 						end
@@ -169,7 +169,7 @@ describe Foscam::Model::User do
 					end
 					it "skips creation since no spots are available for new users" do
 						@client.should_not_receive(:set_users)
-						Foscam::Model::User.connection = @client
+						Foscam::Model::User.client = @client
 						flag = @user.save
 						flag.should be_false
 					end
@@ -181,7 +181,7 @@ describe Foscam::Model::User do
 				end
 				it "skips updating since nothing changed" do
 					@client.should_not_receive(:set_users)
-					Foscam::Model::User.connection = @client
+					Foscam::Model::User.client = @client
 					flag = @user.save
 					flag.should be_false
 				end
@@ -210,7 +210,7 @@ describe Foscam::Model::User do
 							@client.stub(:set_users).and_return(true)
 						end
 						it "updates the user attributes that changed" do
-							Foscam::Model::User.connection = @client					
+							Foscam::Model::User.client = @client					
 							flag = @user.save
 							flag.should be_true
 						end
@@ -220,7 +220,7 @@ describe Foscam::Model::User do
 							@client.stub(:set_users).and_return(false)
 						end
 						it "fails to update the user attributes" do
-							Foscam::Model::User.connection = @client
+							Foscam::Model::User.client = @client
 							flag = @user.save
 							flag.should be_false
 						end
@@ -232,7 +232,7 @@ describe Foscam::Model::User do
 					end
 					it "skips updating since nothing changed" do
 						@client.should_not_receive(:set_users)
-						Foscam::Model::User.connection = @client
+						Foscam::Model::User.client = @client
 						flag = @user.save
 						flag.should be_false
 					end
@@ -244,7 +244,7 @@ describe Foscam::Model::User do
 				end
 				it "skips updating since nothing changed" do
 					@client.should_not_receive(:set_users)
-					Foscam::Model::User.connection = @client
+					Foscam::Model::User.client = @client
 					flag = @user.save
 					flag.should be_false
 				end
@@ -295,7 +295,7 @@ describe Foscam::Model::User do
 			end
 			it "should set the user attributes to be blank" do
 				@client.should_not_receive(:set_users)
-				Foscam::Model::User.connection = @client
+				Foscam::Model::User.client = @client
 				flag = @user.destroy
 				flag.should be_false
 				@user.username.should == ""
@@ -312,7 +312,7 @@ describe Foscam::Model::User do
 				params = {:user1 => "", :pwd1 => "", :pri1 => 0}
 				@client.stub(:set_users).with(params).and_return(true)
 				@client.should_receive(:set_users).with(params).once
-				Foscam::Model::User.connection = @client
+				Foscam::Model::User.client = @client
 				flag = @user.destroy
 				flag.should be_true
 			end

@@ -7,6 +7,9 @@ require "date"
 require "date"
 require "active_model"
 require 'singleton'
+
+require 'foscam/model/base'
+
 module Foscam
 	autoload :Client, 'foscam/client'
 	module Model
