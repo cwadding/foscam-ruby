@@ -12,8 +12,12 @@ module Foscam
 				end
 			end
 
-
+			##
+			# Determine if the the schedule is true at the given date time
+			# @param time [Time, DateTime]
+			# @return [FalseClass, TrueClass] Whether the schedule is true at that time
 			def busy_at?(time)
+				time = time.to_time if time.is_a?(DateTime)
 				if time.sunday?
 					days[:sunday].busy_at?(time)
 				elsif time.monday?
@@ -30,7 +34,10 @@ module Foscam
 					days[:saturday].busy_at?(time)
 				end
 			end
-
+			
+			##
+			# Convert the Week to a nested hash with the day of the week as the key and and time as the second key
+			# @return [Hash]
 			def to_hash
 				h = {}
 				self.days.each do |name, day|
