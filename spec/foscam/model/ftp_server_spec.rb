@@ -48,20 +48,6 @@ describe Foscam::Model::FtpServer do
 	end
 
 
-	describe "#connect" do
-		before(:each) do
-			# @client.stub(:get_params).and_return(one_device_response)
-			@ftp = Foscam::Model::FtpServer.instance
-		end
-		it "returns an instance of a Foscam::Client" do
-			client = @ftp.connect(valid_client_params)
-			client.should be_an_instance_of(::Foscam::Client)
-			client.username.should == valid_client_params[:username]
-			client.url.should == valid_client_params[:url]
-			client.password.should == valid_client_params[:password]
-		end
-	end
-
 	describe "#client=" do
 		before(:each) do
 			@ftp = Foscam::Model::FtpServer.instance

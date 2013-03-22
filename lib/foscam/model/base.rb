@@ -23,9 +23,6 @@ module Foscam
 				# Check if it is a Hash
 				# get the parameters and set them to the attributes
 				run_callbacks :initialize do
-
-					# delete client
-
 					params.each do |attr, value|
 						self.public_send("#{attr}=", value)
 					end if params

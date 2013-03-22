@@ -10,21 +10,6 @@ describe Foscam::Model::Device do
 		@client.stub(:get_camera_params).and_return({:resolution => "qvga", :brightness => 169, :contrast => 2, :mode => "60hz", :flip => "flip", :fps => 0})
 	end
 
-
-	describe "#connect" do
-		before(:each) do
-			# @client.stub(:get_params).and_return(one_device_response)
-			@device = Foscam::Model::Device.instance
-		end
-		it "returns an instance of a Foscam::Client" do
-			client = @device.connect(valid_params)
-			client.should be_an_instance_of(::Foscam::Client)
-			client.username.should == valid_params[:username]
-			client.url.should == valid_params[:url]
-			client.password.should == valid_params[:password]
-		end
-	end
-
 	describe "#client=" do
 		before(:each) do
 			@device = Foscam::Model::Device.instance

@@ -7,6 +7,7 @@ module Foscam
 			define_model_callbacks :save
 
 			# attr_accessor :name (get_params, set_alias)
+			# attr_accessor :name (get_misc, set_misc)
 			attr_reader :resolution, :brightness, :contrast, :orientation
 
 			def resolution=(val)
