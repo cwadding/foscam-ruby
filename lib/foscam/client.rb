@@ -279,27 +279,7 @@ module Foscam
 		# 	* :ftp_filename  (String)
 		# 	* :ftp_numberoffiles (Fixnum)
 		# 	* :ftp_schedule_enable (FalseClass, TrueClass)
-		# 	* :ftp_schedule_sun_0 (Fixnum)
-		# 	* :ftp_schedule_sun_1 (Fixnum)
-		# 	* :ftp_schedule_sun_2 (Fixnum)
-		# 	* :ftp_schedule_mon_0 (Fixnum)
-		# 	* :ftp_schedule_mon_1 (Fixnum)
-		# 	* :ftp_schedule_mon_2 (Fixnum)
-		# 	* :ftp_schedule_tue_0 (Fixnum)
-		# 	* :ftp_schedule_tue_1 (Fixnum)
-		# 	* :ftp_schedule_tue_2 (Fixnum)
-		# 	* :ftp_schedule_wed_0 (Fixnum)
-		# 	* :ftp_schedule_wed_1 (Fixnum)
-		# 	* :ftp_schedule_wed_2 (Fixnum)
-		# 	* :ftp_schedule_thu_0 (Fixnum)
-		# 	* :ftp_schedule_thu_1 (Fixnum)
-		# 	* :ftp_schedule_thu_2 (Fixnum)
-		# 	* :ftp_schedule_fri_0 (Fixnum)
-		# 	* :ftp_schedule_fri_1 (Fixnum)
-		# 	* :ftp_schedule_fri_2 (Fixnum)
-		# 	* :ftp_schedule_sat_0 (Fixnum)
-		# 	* :ftp_schedule_sat_1 (Fixnum)
-		# 	* :ftp_schedule_sat_2 (Fixnum)
+		# 	* :ftp_schedule (Schedule::Week)
 		# 	* :alarm_motion_armed (FalseClass, TrueClass)
 		# 	* :alarm_motion_sensitivity (Fixnum)
 		# 	* :alarm_motion_compensation  (Fixnum)
@@ -314,27 +294,7 @@ module Foscam
 		# 	* :alarm_msn (FalseClass, TrueClass)
 		# 	* :alarm_http_url (String)
 		# 	* :alarm_schedule_enable (FalseClass, TrueClass)
-		# 	* :alarm_schedule_sun_0 (Fixnum)
-		# 	* :alarm_schedule_sun_1 (Fixnum)
-		# 	* :alarm_schedule_sun_2 (Fixnum)
-		# 	* :alarm_schedule_mon_0 (Fixnum)
-		# 	* :alarm_schedule_mon_1 (Fixnum)
-		# 	* :alarm_schedule_mon_2 (Fixnum)
-		# 	* :alarm_schedule_tue_0 (Fixnum)
-		# 	* :alarm_schedule_tue_1 (Fixnum)
-		# 	* :alarm_schedule_tue_2 (Fixnum)
-		# 	* :alarm_schedule_wed_0 (Fixnum)
-		# 	* :alarm_schedule_wed_1 (Fixnum)
-		# 	* :alarm_schedule_wed_2 (Fixnum)
-		# 	* :alarm_schedule_thu_0 (Fixnum)
-		# 	* :alarm_schedule_thu_1 (Fixnum)
-		# 	* :alarm_schedule_thu_2 (Fixnum)
-		# 	* :alarm_schedule_fri_0 (Fixnum)
-		# 	* :alarm_schedule_fri_1 (Fixnum)
-		# 	* :alarm_schedule_fri_2 (Fixnum)
-		# 	* :alarm_schedule_sat_0 (Fixnum)
-		# 	* :alarm_schedule_sat_1 (Fixnum)
-		# 	* :alarm_schedule_sat_2 (Fixnum)
+		# 	* :alarm_schedule (Schedule::Week)
 		# 	* :decoder_baud (Fixnum)
 		# 	* :msn_user (String)
 		# 	* :msn_pwd (String)
@@ -352,26 +312,32 @@ module Foscam
 			response = @connection.get("get_params.cgi")
 			response = response.success? ? parse_response(response) : {}
 			unless response.empty?
+				alarm_schedule = {}
+				ftp_schedule = {}
+				response.keys.each do |field|
+					ftp_match = field.to_s.match(/ftp_schedule_(.+)_(\d)/)
+					unless ftp_match.nil?
+						value = response.delete(field)
+						ftp_schedule.merge!("#{ftp_match[1]}_#{ftp_match[2]}".to_sym => value.to_i)
+					end
+
+					alarm_match = field.to_s.match(/alarm_schedule_(.+)_(\d)/)
+					unless alarm_match.nil?
+						value = response.delete(field)
+						alarm_schedule.merge!("#{alarm_match[1]}_#{alarm_match[2]}".to_sym => value.to_i)
+					end
+				end
+
+				response[:ftp_schedule] = ::Foscam::Schedule::Week.new(ftp_schedule)
+
+				response[:alarm_schedule] = ::Foscam::Schedule::Week.new(alarm_schedule)
+
 				response[:now] = ::DateTime.strptime(response[:now],'%s')
 				[:ntp_enable, :wifi_enable, :pppoe_enable, :upnp_enable, :alarm_schedule_enable, :ftp_schedule_enable].each do |field|
 					response[field] = response[field].to_i > 0
 				end
-				[
-					:ftp_schedule_sun_0, :ftp_schedule_sun_1, :ftp_schedule_sun_2, 
-					:ftp_schedule_mon_0, :ftp_schedule_mon_1, :ftp_schedule_mon_2, 
-					:ftp_schedule_tue_0, :ftp_schedule_tue_1, :ftp_schedule_tue_2, 
-					:ftp_schedule_wed_0, :ftp_schedule_wed_1, :ftp_schedule_wed_2, 
-					:ftp_schedule_thu_0, :ftp_schedule_thu_1, :ftp_schedule_thu_2, 
-					:ftp_schedule_fri_0, :ftp_schedule_fri_1, :ftp_schedule_fri_2, 
-					:ftp_schedule_sat_0, :ftp_schedule_sat_1, :ftp_schedule_sat_2,
-					:alarm_schedule_sun_0, :alarm_schedule_sun_1, :alarm_schedule_sun_2, 
-					:alarm_schedule_mon_0, :alarm_schedule_mon_1, :alarm_schedule_mon_2, 
-					:alarm_schedule_tue_0, :alarm_schedule_tue_1, :alarm_schedule_tue_2, 
-					:alarm_schedule_wed_0, :alarm_schedule_wed_1, :alarm_schedule_wed_2, 
-					:alarm_schedule_thu_0, :alarm_schedule_thu_1, :alarm_schedule_thu_2, 
-					:alarm_schedule_fri_0, :alarm_schedule_fri_1, :alarm_schedule_fri_2, 
-					:alarm_schedule_sat_0, :alarm_schedule_sat_1, :alarm_schedule_sat_2,
-					:daylight_savings_time, :ddns_proxy_port, :ftp_port, :mail_port, :port, :dev2_port, :dev3_port, :dev4_port, :dev5_port, :dev6_port, :dev7_port, :dev8_port, :dev9_port].each do |field|
+
+				[:daylight_savings_time, :ddns_proxy_port, :ftp_port, :mail_port, :port, :dev2_port, :dev3_port, :dev4_port, :dev5_port, :dev6_port, :dev7_port, :dev8_port, :dev9_port].each do |field|
 					response[field] = response[field].to_i
 				end
 				[:user1_pri, :user2_pri, :user3_pri, :user4_pri, :user5_pri, :user6_pri, :user7_pri, :user8_pri].each do |key|
@@ -579,61 +545,39 @@ module Foscam
 
 		##
 		# Set Forbidden
-		# @param [Hash] params
-		# @option params [Fixnum] :schedule_fri_0
-		# @option params [Fixnum] :schedule_fri_1
-		# @option params [Fixnum] :schedule_fri_2
-		# @option params [Fixnum] :schedule_mon_0
-		# @option params [Fixnum] :schedule_mon_1
-		# @option params [Fixnum] :schedule_mon_2
-		# @option params [Fixnum] :schedule_sat_0
-		# @option params [Fixnum] :schedule_sat_1
-		# @option params [Fixnum] :schedule_sat_2
-		# @option params [Fixnum] :schedule_sun_0
-		# @option params [Fixnum] :schedule_sun_1
-		# @option params [Fixnum] :schedule_sun_2
-		# @option params [Fixnum] :schedule_thu_0
-		# @option params [Fixnum] :schedule_thu_1
-		# @option params [Fixnum] :schedule_thu_2
-		# @option params [Fixnum] :schedule_tue_0
-		# @option params [Fixnum] :schedule_tue_1
-		# @option params [Fixnum] :schedule_tue_2
-		# @option params [Fixnum] :schedule_wed_0
-		# @option params [Fixnum] :schedule_wed_1
-		# @option params [Fixnum] :schedule_wed_2
+		# @param [Schedule::Week] week
 		# @return [FalseClass,TrueClass] whether the request was successful.
-		def set_forbidden(params)
-			response = @connection.get("set_forbidden.cgi?#{params.to_query}")
-			response.success?
+		def set_forbidden(week)
+			if week.is_a?(Schedule::Week)
+				params = {}
+				week.to_param.each_pair do |key, value|
+					params.merge!("schedule_#{key}" => value)
+				end
+				response = @connection.get("set_forbidden.cgi?#{params.to_query}")
+				response.success?
+			else
+				false
+			end
 		end
 
 		##
 		# Returns the forbidden schedule for the camera
-		# @return [Hash] If the request is unsuccessful the hash will be empty. Otherwise it contains the following fields:
-		# 	* :schedule_sun_0 (Fixnum)
-		# 	* :schedule_sun_1 (Fixnum)
-		# 	* :schedule_sun_2 (Fixnum)
-		# 	* :schedule_mon_0 (Fixnum)
-		# 	* :schedule_mon_1 (Fixnum)
-		# 	* :schedule_mon_2 (Fixnum)
-		# 	* :schedule_tue_0 (Fixnum)
-		# 	* :schedule_tue_1 (Fixnum)
-		# 	* :schedule_tue_2 (Fixnum)
-		# 	* :schedule_wed_0 (Fixnum)
-		# 	* :schedule_wed_1 (Fixnum)
-		# 	* :schedule_wed_2 (Fixnum)
-		# 	* :schedule_thu_0 (Fixnum)
-		# 	* :schedule_thu_1 (Fixnum)
-		# 	* :schedule_thu_2 (Fixnum)
-		# 	* :schedule_fri_0 (Fixnum)
-		# 	* :schedule_fri_1 (Fixnum)
-		# 	* :schedule_fri_2 (Fixnum)
-		# 	* :schedule_sat_0 (Fixnum)
-		# 	* :schedule_sat_1 (Fixnum)
-		# 	* :schedule_sat_2 (Fixnum)
+		# @return [Schedule::Week, nil] If the request is unsuccessful then nil is returned.
 		def get_forbidden
 			response = @connection.get("get_forbidden.cgi")
-			response.success? ? parse_response(response) : {}
+			params = response.success? ? parse_response(response) : {}
+			schedule = {}
+			unless params.empty?
+				params.keys.each do |field|
+					match = field.to_s.match(/schedule_(.+)_(\d)/)
+					unless match.nil?
+						schedule.merge!("#{match[1]}_#{match[2]}".to_sym => params[field].to_i)
+					end
+				end
+				::Foscam::Schedule::Week.new(schedule)
+			else
+				nil
+			end
 		end
 
 		##

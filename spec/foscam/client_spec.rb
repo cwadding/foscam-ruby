@@ -410,23 +410,9 @@ describe Foscam::Client do
 					:mail_svr, :mail_port, :mail_tls, :mail_user, :mail_pwd, :mail_sender, 
 					:mail_receiver1, :mail_receiver2, :mail_receiver3, :mail_receiver4, :mail_inet_ip, 
 					:ftp_svr, :ftp_port, :ftp_user, :ftp_pwd, :ftp_dir, :ftp_mode, :ftp_upload_interval, :ftp_filename, :ftp_numberoffiles, :ftp_schedule_enable, 
-					:ftp_schedule_sun_0, :ftp_schedule_sun_1, :ftp_schedule_sun_2, 
-					:ftp_schedule_mon_0, :ftp_schedule_mon_1, :ftp_schedule_mon_2, 
-					:ftp_schedule_tue_0, :ftp_schedule_tue_1, :ftp_schedule_tue_2, 
-					:ftp_schedule_wed_0, :ftp_schedule_wed_1, :ftp_schedule_wed_2, 
-					:ftp_schedule_thu_0, :ftp_schedule_thu_1, :ftp_schedule_thu_2, 
-					:ftp_schedule_fri_0, :ftp_schedule_fri_1, :ftp_schedule_fri_2, 
-					:ftp_schedule_sat_0, :ftp_schedule_sat_1, :ftp_schedule_sat_2, 
-					:alarm_motion_armed, :alarm_motion_sensitivity, :alarm_motion_compensation, 
+					:ftp_schedule,:alarm_motion_armed, :alarm_motion_sensitivity, :alarm_motion_compensation, 
 					:alarm_input_armed, :alarm_ioin_level, :alarm_iolinkage, :alarm_preset, :alarm_ioout_level, :alarm_mail, :alarm_upload_interval, :alarm_http, :alarm_msn, :alarm_http_url, :alarm_schedule_enable, 
-					:alarm_schedule_sun_0, :alarm_schedule_sun_1, :alarm_schedule_sun_2, 
-					:alarm_schedule_mon_0, :alarm_schedule_mon_1, :alarm_schedule_mon_2, 
-					:alarm_schedule_tue_0, :alarm_schedule_tue_1, :alarm_schedule_tue_2, 
-					:alarm_schedule_wed_0, :alarm_schedule_wed_1, :alarm_schedule_wed_2, 
-					:alarm_schedule_thu_0, :alarm_schedule_thu_1, :alarm_schedule_thu_2, 
-					:alarm_schedule_fri_0, :alarm_schedule_fri_1, :alarm_schedule_fri_2, 
-					:alarm_schedule_sat_0, :alarm_schedule_sat_1, :alarm_schedule_sat_2, 
-					:decoder_baud, :msn_user, :msn_pwd, 
+					:alarm_schedule,:decoder_baud, :msn_user, :msn_pwd, 
 					:msn_friend1, :msn_friend2, :msn_friend3, :msn_friend4, :msn_friend5, :msn_friend6, :msn_friend7, :msn_friend8, :msn_friend9, :msn_friend10
 				].each do |key|
 					response.should have_key(key) 
@@ -484,34 +470,14 @@ describe Foscam::Client do
 				response[:ftp_schedule_enable].should be_a_kind_of(Boolean)
 			end
 
-			it "sets the ftp_schedule as an integer" do
+			it "sets the ftp_schedule as an Week" do
 				response = @service.get_params
-				[	
-					:ftp_schedule_sun_0, :ftp_schedule_sun_1, :ftp_schedule_sun_2, 
-					:ftp_schedule_mon_0, :ftp_schedule_mon_1, :ftp_schedule_mon_2, 
-					:ftp_schedule_tue_0, :ftp_schedule_tue_1, :ftp_schedule_tue_2, 
-					:ftp_schedule_wed_0, :ftp_schedule_wed_1, :ftp_schedule_wed_2, 
-					:ftp_schedule_thu_0, :ftp_schedule_thu_1, :ftp_schedule_thu_2, 
-					:ftp_schedule_fri_0, :ftp_schedule_fri_1, :ftp_schedule_fri_2, 
-					:ftp_schedule_sat_0, :ftp_schedule_sat_1, :ftp_schedule_sat_2
-				].each do |key|
-					response[key].should be_a_kind_of(Integer)
-				end
+				response[:ftp_schedule].should be_an_instance_of(Foscam::Schedule::Week)
 			end
 
-			it "sets the alarm_schedule as an integer" do
+			it "sets the alarm_schedule as an Week" do
 				response = @service.get_params
-				[	
-					:alarm_schedule_sun_0, :alarm_schedule_sun_1, :alarm_schedule_sun_2, 
-					:alarm_schedule_mon_0, :alarm_schedule_mon_1, :alarm_schedule_mon_2, 
-					:alarm_schedule_tue_0, :alarm_schedule_tue_1, :alarm_schedule_tue_2, 
-					:alarm_schedule_wed_0, :alarm_schedule_wed_1, :alarm_schedule_wed_2, 
-					:alarm_schedule_thu_0, :alarm_schedule_thu_1, :alarm_schedule_thu_2, 
-					:alarm_schedule_fri_0, :alarm_schedule_fri_1, :alarm_schedule_fri_2, 
-					:alarm_schedule_sat_0, :alarm_schedule_sat_1, :alarm_schedule_sat_2
-				].each do |key|
-					response[key].should be_a_kind_of(Integer)
-				end
+				response[:alarm_schedule].should be_an_instance_of(Foscam::Schedule::Week)
 			end
 		end
 
@@ -1028,15 +994,16 @@ describe Foscam::Client do
 			end
 			it "returns a hash of variables" do
 				params = {
-					:schedule_sun_0 => 95, :schedule_sun_1 => 45, :schedule_sun_2 => 20,
-					:schedule_mon_0 => 95, :schedule_mon_1 => 45, :schedule_mon_2 => 20,
-					:schedule_tue_0 => 95, :schedule_tue_1 => 45, :schedule_tue_2 => 20,
-					:schedule_wed_0 => 95, :schedule_wed_1 => 45, :schedule_wed_2 => 20,
-					:schedule_thu_0 => 95, :schedule_thu_1 => 45, :schedule_thu_2 => 20,
-					:schedule_fri_0 => 95, :schedule_fri_1 => 45, :schedule_fri_2 => 20,
-					:schedule_sat_0 => 95, :schedule_sat_1 => 45, :schedule_sat_2 => 20
+					:sun_0 => 95, :sun_1 => 45, :sun_2 => 20,
+					:mon_0 => 95, :mon_1 => 45, :mon_2 => 20,
+					:tue_0 => 95, :tue_1 => 45, :tue_2 => 20,
+					:wed_0 => 95, :wed_1 => 45, :wed_2 => 20,
+					:thu_0 => 95, :thu_1 => 45, :thu_2 => 20,
+					:fri_0 => 95, :fri_1 => 45, :fri_2 => 20,
+					:sat_0 => 95, :sat_1 => 45, :sat_2 => 20
 				}
-				response = @service.set_forbidden(params)
+				week = Foscam::Schedule::Week.new(params)
+				response = @service.set_forbidden(week)
 				response.should be_true
 			end
 		end
@@ -1063,18 +1030,9 @@ describe Foscam::Client do
 					spec.run
 				end
 			end
-			it "returns a hash of variables" do
+			it "returns an Week" do
 				response = @service.get_forbidden
-				[	:schedule_sun_0, :schedule_sun_1, :schedule_sun_2,
-					:schedule_mon_0, :schedule_mon_1, :schedule_mon_2,
-					:schedule_tue_0, :schedule_tue_1, :schedule_tue_2,
-					:schedule_wed_0, :schedule_wed_1, :schedule_wed_2,
-					:schedule_thu_0, :schedule_thu_1, :schedule_thu_2,
-					:schedule_fri_0, :schedule_fri_1, :schedule_fri_2,
-					:schedule_sat_0, :schedule_sat_1, :schedule_sat_2
-				].each do |key|
-					response.should have_key(key) 
-				end
+				response.should be_an_instance_of(Foscam::Schedule::Week)
 			end
 		end
 
@@ -1087,7 +1045,7 @@ describe Foscam::Client do
 			end
 			it "returns a hash of variables" do
 				response = @service.get_forbidden
-				response.should == {}
+				response.should be_nil
 			end
 		end
 	end

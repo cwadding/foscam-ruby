@@ -55,6 +55,13 @@ describe Foscam::Schedule::Week do
 		end
 	end
 
+	describe "#to_param" do
+		it "converts the object back to the input hash" do
+			week = Foscam::Schedule::Week.new(valid_params)
+			week.to_param.should == valid_params
+		end
+	end
+
 	describe "#busy_at?" do
 		context "with even bits set" do
 			before(:each) do
