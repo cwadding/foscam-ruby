@@ -17,6 +17,7 @@ module Foscam
 		autoload :Device, 		'foscam/model/device'
 		autoload :FtpServer, 	'foscam/model/ftp_server'
 		autoload :MailServer,	'foscam/model/mail_server'
+		autoload :AlarmConfig,	'foscam/model/alarm_config'
 	end
 
 	module Schedule

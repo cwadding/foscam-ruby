@@ -18,27 +18,7 @@ describe Foscam::Model::FtpServer do
 			:ftp_filename  => "",
 			:ftp_numberoffiles => 5,
 			:ftp_schedule_enable => false,
-			:ftp_schedule_sun_0 => 0,
-			:ftp_schedule_sun_1 => 0,
-			:ftp_schedule_sun_2 => 0,
-			:ftp_schedule_mon_0 => 0,
-			:ftp_schedule_mon_1 => 0,
-			:ftp_schedule_mon_2 => 0,
-			:ftp_schedule_tue_0 => 0,
-			:ftp_schedule_tue_1 => 0,
-			:ftp_schedule_tue_2 => 0,
-			:ftp_schedule_wed_0 => 0,
-			:ftp_schedule_wed_1 => 0,
-			:ftp_schedule_wed_2 => 0,
-			:ftp_schedule_thu_0 => 0,
-			:ftp_schedule_thu_1 => 0,
-			:ftp_schedule_thu_2 => 0,
-			:ftp_schedule_fri_0 => 0,
-			:ftp_schedule_fri_1 => 0,
-			:ftp_schedule_fri_2 => 0,
-			:ftp_schedule_sat_0 => 0,
-			:ftp_schedule_sat_1 => 0,
-			:ftp_schedule_sat_2 => 0
+			:ftp_schedule => Foscam::Schedule::Week.new
 		}
 	end
 

@@ -8,27 +8,7 @@
 		# 	* :ftp_filename  (String)
 		# 	* :ftp_numberoffiles (Fixnum)
 		# 	* :ftp_schedule_enable (FalseClass, TrueClass)
-		# 	* :ftp_schedule_sun_0 (Fixnum)
-		# 	* :ftp_schedule_sun_1 (Fixnum)
-		# 	* :ftp_schedule_sun_2 (Fixnum)
-		# 	* :ftp_schedule_mon_0 (Fixnum)
-		# 	* :ftp_schedule_mon_1 (Fixnum)
-		# 	* :ftp_schedule_mon_2 (Fixnum)
-		# 	* :ftp_schedule_tue_0 (Fixnum)
-		# 	* :ftp_schedule_tue_1 (Fixnum)
-		# 	* :ftp_schedule_tue_2 (Fixnum)
-		# 	* :ftp_schedule_wed_0 (Fixnum)
-		# 	* :ftp_schedule_wed_1 (Fixnum)
-		# 	* :ftp_schedule_wed_2 (Fixnum)
-		# 	* :ftp_schedule_thu_0 (Fixnum)
-		# 	* :ftp_schedule_thu_1 (Fixnum)
-		# 	* :ftp_schedule_thu_2 (Fixnum)
-		# 	* :ftp_schedule_fri_0 (Fixnum)
-		# 	* :ftp_schedule_fri_1 (Fixnum)
-		# 	* :ftp_schedule_fri_2 (Fixnum)
-		# 	* :ftp_schedule_sat_0 (Fixnum)
-		# 	* :ftp_schedule_sat_1 (Fixnum)
-		# 	* :ftp_schedule_sat_2 (Fixnum)
+		# 	* :ftp_schedule (Fixnum)
 
 module Foscam
 	module Model
@@ -39,7 +19,7 @@ module Foscam
 
 			define_model_callbacks :save, :clear
 
-			attr_reader :dir, :username, :password, :address, :port, :upload_interval
+			attr_reader :dir, :username, :password, :address, :port, :upload_interval, :schedule
 
 
 			def dir=(val)
