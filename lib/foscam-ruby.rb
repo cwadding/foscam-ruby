@@ -18,6 +18,7 @@ module Foscam
 		autoload :FtpServer, 	'foscam/model/ftp_server'
 		autoload :MailServer,	'foscam/model/mail_server'
 		autoload :AlarmConfig,	'foscam/model/alarm_config'
+		autoload :Network,		'foscam/model/network'
 	end
 
 	module Schedule
