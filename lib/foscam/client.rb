@@ -56,6 +56,11 @@ module Foscam
 			response.success? ? ::MiniMagick::Image.read(response.body) : nil
 		end
 
+
+		def videostream
+			"#{@url}videostream.cgi?user=#{@username}&password=#{@password}"
+		end
+
 		##
 		# Obtains the cameras status information
 		# @see DDNS_STATUS
