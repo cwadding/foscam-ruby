@@ -45,7 +45,7 @@ module Foscam
 			end
 
 			def stream_url
-				@client.videostream
+				client.videostream
 			end
 
 			define_attribute_methods [:resolution, :brightness, :contrast, :orientation]
