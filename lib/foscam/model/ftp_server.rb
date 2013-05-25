@@ -12,98 +12,34 @@
 
 module Foscam
 	module Model
-		class FtpServer < Base
+		class FtpServer
 
-			include Singleton
+			attr_reader :dir, :user, :pwd, :svr, :port, :upload_interval, :schedule, :schedule_enable, :filename, :mode, :numberoffiles
 
+      def initialize(args = {})
+        @schedule = ::Foscam::Schedule::Week.new(args[:schedule])
+        [:svr, :user, :pwd, :dir, :filename].each do |field|
+          self.instance_variable_set("@#{field}".to_sym, args[field])
+        end
+        [:port, :upload_interval, :mode, :numberoffiles].each do |field|
+          self.instance_variable_set("@#{field}".to_sym, args[field].to_i)
+        end
+        [:schedule_enable].each do |field|
+          self.instance_variable_set("@#{field}".to_sym, args[field].to_i > 0)
+        end
+		  end
 
-			define_model_callbacks :save, :clear
+	     #     ftp_match = field.to_s.match(/ftp_schedule_(.+)_(\d)/)
+	     #     unless ftp_match.nil?
+	     #       value = params.delete(field)
+	     #       ftp_schedule.merge!("#{ftp_match[1]}_#{ftp_match[2]}".to_sym => value.to_i)
+	     #     end
+	     #   response[:ftp_schedule] = ::Foscam::Schedule::Week.new(ftp_schedule)
+	     
+	     #   [:ftp_schedule_enable].each do |field|
+	     #     response[field] = response[field].to_i > 0
+	     #   end
 
-			attr_reader :dir, :username, :password, :address, :port, :upload_interval, :schedule
-
-
-			def dir=(val)
-				dir_will_change! unless val == @dir
-				@dir = val
-			end
-
-			def username=(val)
-				username_will_change! unless val == @username
-				@username = val
-			end
-
-			def password=(val)
-				password_will_change! unless val == @password
-				@password = val
-			end
-
-			def address=(val)
-				address_will_change! unless val == @address
-				@address = val
-			end
-
-			def port=(val)
-				port_will_change! unless val == @port
-				@port = val
-			end
-
-			def upload_interval=(val)
-				upload_interval_will_change! unless val == @upload_interval
-				@upload_interval = val
-			end
-
-
-			def client=(obj)
-				unless obj.nil?
-					FtpServer::client = obj
-					params = client.get_params
-					unless params.empty?
-						self.dir = params[:ftp_dir]
-						self.address = params[:ftp_svr]
-						self.port = params[:ftp_port]
-						self.username = params[:ftp_user]
-						self.password = params[:ftp_pwd]
-						self.upload_interval = params[:ftp_upload_interval]
-					end
-				end
-			end
-
-			define_attribute_methods [:dir, :username, :password, :address, :port, :upload_interval]
-
-			def save
-				run_callbacks :save do
-					flag = false
-					if changed? && is_valid?
-						@previously_changed = changes
-						flag = client.set_ftp(dirty_params_hash)
-						@changed_attributes.clear if flag
-					end
-					flag
-				end
-			end
-
-			def clear
-				run_callbacks :clear do
-					flag = false
-					params = {:dir => "", :user => "", :pwd => "", :svr => "", :port => 21, :upload_interval => 0}
-					flag = client.set_ftp(params)
-					@changed_attributes.clear if flag
-					flag
-				end
-			end
-
-			private
-
-			def dirty_params_hash
-				h = {}
-				h.merge!({:dir => self.dir}) if dir_changed?
-				h.merge!({:user => self.username}) if username_changed?
-				h.merge!({:pwd => self.password}) if password_changed?
-				h.merge!({:svr => self.address}) if address_changed?
-				h.merge!({:port => self.port}) if port_changed?
-				h.merge!({:upload_interval => self.upload_interval}) if upload_interval_changed?
-				h
-			end
 		end
 	end
 end

@@ -9,6 +9,247 @@ describe Foscam::Client do
 		@service.connection = @connection
 	end
 
+  describe "#group_params" do
+    before(:each) do
+      @params = {
+        :id => "000DC5D4DC51", :sys_ver => "11.22.2.38", :app_ver => "2.4.18.17", :alias => "R2D2", :now => "1352782970", :tz => "18000", :daylight_saving_time => "0",
+        :ntp_enable=>"1", :ntp_svr => "0.ca.pool.ntp.org",
+        :user1_name => "my_username", :user1_pwd => "my_password", :user1_pri=>"2",
+        :user2_name => "test", :user2_pwd => "test", :user2_pri => "1", 
+        :user3_name => "", :user3_pwd => "", :user3_pri => "0",
+        :user4_name => "", :user4_pwd => "", :user4_pri => "0",
+        :user5_name => "", :user5_pwd => "", :user5_pri => "0",
+        :user6_name => "", :user6_pwd => "", :user6_pri => "0",
+        :user7_name => "", :user7_pwd => "", :user7_pri => "0",
+        :user8_name => "", :user8_pwd => "", :user8_pri => "0",
+        :dev2_alias => "", :dev2_host => "", :dev2_port => "0", :dev2_user => "", :dev2_pwd => "",
+        :dev3_alias => "", :dev3_host => "", :dev3_port => "0", :dev3_user => "", :dev3_pwd => "",
+        :dev4_alias => "", :dev4_host => "", :dev4_port => "0", :dev4_user => "", :dev4_pwd => "",
+        :dev5_alias => "", :dev5_host => "", :dev5_port => "0", :dev5_user => "", :dev5_pwd => "",
+        :dev6_alias => "", :dev6_host => "", :dev6_port => "0", :dev6_user => "", :dev6_pwd => "",
+        :dev7_alias => "", :dev7_host => "", :dev7_port => "0", :dev7_user => "", :dev7_pwd => "",
+        :dev8_alias => "", :dev8_host => "", :dev8_port => "0", :dev8_user => "", :dev8_pwd => "",
+        :dev9_alias => "", :dev9_host => "", :dev9_port => "0", :dev9_user => "", :dev9_pwd => "",
+        :ip => "0.0.0.0", :mask => "0.0.0.0", :gateway => "0.0.0.0", :dns => "0.0.0.0", :port => "80", :wifi_ssid => "my_wireless_ssid",
+        :wifi_enable => "1", :wifi_encrypt => "3", :wifi_defkey => "0", :wifi_key1 => "", :wifi_key2 => "", :wifi_key3 => "", :wifi_key4 => "", :wifi_authtype => "0", :wifi_keyformat => "0", :wifi_key1_bits => "0", :wifi_key2_bits => "0", :wifi_key3_bits => "0", :wifi_key4_bits => "0", :wifi_mode => "0", :wifi_wpa_psk => "my_wireless_password",
+        :pppoe_enable => "0", :pppoe_user => "", :pppoe_pwd => "", :upnp_enable => "0", 
+        :ddns_service => "0", :ddns_user => "", :ddns_pwd=>"", :ddns_host=>"", :ddns_proxy_svr=>"", :ddns_proxy_port=>"0", 
+        :mail_svr=>"", :mail_port=>"0", :mail_tls=>"0", :mail_user=>"", :mail_pwd=>"", :mail_sender=>"", :mail_receiver1=>"", :mail_receiver2=>"", :mail_receiver3=>"", :mail_receiver4=>"", :mail_inet_ip=>"0", 
+        :ftp_svr=>"192.168.0.148", :ftp_port=>"21", :ftp_user=>"my_username", :ftp_pwd=>"secret", :ftp_dir=>"R2D2", :ftp_mode=>"1", :ftp_upload_interval=>"0", :ftp_filename=>"", :ftp_numberoffiles=>"0", 
+        :ftp_schedule_enable=>"0", :ftp_schedule_sun_0=>"0", :ftp_schedule_sun_1=>"0", :ftp_schedule_sun_2=>"0", :ftp_schedule_mon_0=>"0", :ftp_schedule_mon_1=>"0", :ftp_schedule_mon_2=>"0", :ftp_schedule_tue_0=>"0", :ftp_schedule_tue_1=>"0", :ftp_schedule_tue_2=>"0", :ftp_schedule_wed_0=>"0", :ftp_schedule_wed_1=>"0", :ftp_schedule_wed_2=>"0", :ftp_schedule_thu_0=>"0", :ftp_schedule_thu_1=>"0", :ftp_schedule_thu_2=>"0", :ftp_schedule_fri_0=>"0", :ftp_schedule_fri_1=>"0", :ftp_schedule_fri_2=>"0", :ftp_schedule_sat_0=>"0", :ftp_schedule_sat_1=>"0", :ftp_schedule_sat_2=>"0",
+        :alarm_motion_armed=>"1", :alarm_motion_sensitivity=>"0", :alarm_motion_compensation=>"0", :alarm_input_armed=>"1", :alarm_ioin_level=>"1", :alarm_iolinkage=>"0", :alarm_preset=>"0", :alarm_ioout_level=>"1", :alarm_mail=>"0", :alarm_upload_interval=>"2", :alarm_http=>"0", :alarm_msn=>"0", :alarm_http_url=>"", 
+        :alarm_schedule_enable=>"1", :alarm_schedule_sun_0=>"0", :alarm_schedule_sun_1=>"4294967264", :alarm_schedule_sun_2=>"16383", :alarm_schedule_mon_0=>"0", :alarm_schedule_mon_1=>"4294967264", :alarm_schedule_mon_2=>"16383", :alarm_schedule_tue_0=>"0", :alarm_schedule_tue_1=>"4294967264", :alarm_schedule_tue_2=>"16383", :alarm_schedule_wed_0=>"0", :alarm_schedule_wed_1=>"4294967264", :alarm_schedule_wed_2=>"16383", :alarm_schedule_thu_0=>"0", :alarm_schedule_thu_1=>"4294967264", :alarm_schedule_thu_2=>"16383", :alarm_schedule_fri_0=>"0", :alarm_schedule_fri_1=>"4294967264", :alarm_schedule_fri_2=>"16383", :alarm_schedule_sat_0=>"0", :alarm_schedule_sat_1=>"4294967264", :alarm_schedule_sat_2=>"16383",
+        :decoder_baud=>"12",
+        :msn_user=>"", :msn_pwd=>"", :msn_friend1=>"", :msn_friend2=>"", :msn_friend3=>"", :msn_friend4=>"", :msn_friend5=>"", :msn_friend6=>"", :msn_friend7=>"", :msn_friend8=>"", :msn_friend9=>"", :msn_friend10=>""}
+    end
+
+    it "groups the device parameters" do
+      results = Foscam::Client.send(:group_params, @params)
+      results.should have_key(:device)
+      results[:device].should have_key(:id)
+      results[:device].should have_key(:sys_ver)
+      results[:device].should have_key(:app_ver)
+      results[:device].should have_key(:alias)
+      results[:device].should have_key(:now)
+      results[:device].should have_key(:tz)
+      results[:device].should have_key(:daylight_saving_time)
+    end
+    
+    it "groups the ntp parameters" do
+      results = Foscam::Client.send(:group_params, @params)
+      results.should have_key(:ntp)
+      results[:ntp].should have_key(:enable)
+      results[:ntp].should have_key(:svr)
+    end
+    
+    it "groups the user parameters" do
+      results = Foscam::Client.send(:group_params, @params)
+      results.should have_key(:users)
+      results[:users].should be_a_instance_of(Hash)
+      results[:users].keys.count.should == ::Foscam::Model::User::MAX_NUMBER
+      results[:users].each do |id, user|
+        user.should have_key(:name)
+        user.should have_key(:pwd)
+        user.should have_key(:pri)
+      end
+    end
+    
+    it "groups the network parameters" do
+      results = Foscam::Client.send(:group_params, @params)
+      results.should have_key(:network)
+      results[:network].should have_key(:ip)
+      results[:network].should have_key(:mask)
+      results[:network].should have_key(:gateway)
+      results[:network].should have_key(:dns)
+      results[:network].should have_key(:port)
+    end
+
+    it "groups the wifi parameters" do
+      results = Foscam::Client.send(:group_params, @params)
+      results.should have_key(:wifi)
+      results[:wifi].should have_key(:enable)
+      results[:wifi].should have_key(:ssid)
+      results[:wifi].should have_key(:encrypt)
+      results[:wifi].should have_key(:defkey)
+      results[:wifi].should have_key(:key1)
+      results[:wifi].should have_key(:key1_bits)
+      results[:wifi].should have_key(:key2)
+      results[:wifi].should have_key(:key2_bits)
+      results[:wifi].should have_key(:key3)
+      results[:wifi].should have_key(:key3_bits)
+      results[:wifi].should have_key(:key4)
+      results[:wifi].should have_key(:key4_bits)
+      results[:wifi].should have_key(:authtype)
+      results[:wifi].should have_key(:keyformat)
+      results[:wifi].should have_key(:mode)
+      results[:wifi].should have_key(:wpa_psk)
+    end
+    it "groups the pppoe parameters" do    
+      results = Foscam::Client.send(:group_params, @params)
+      results.should have_key(:pppoe)
+      results[:pppoe].should have_key(:enable)
+      results[:pppoe].should have_key(:user)
+      results[:pppoe].should have_key(:pwd)
+    end
+    
+    it "groups the upnp parameters" do    
+      results = Foscam::Client.send(:group_params, @params)
+      results.should have_key(:upnp)
+      results[:upnp].should have_key(:enable)
+    end
+    
+    
+    it "groups the ddns parameters" do    
+      results = Foscam::Client.send(:group_params, @params)
+      results.should have_key(:ddns)
+      results[:ddns].should have_key(:service)
+      results[:ddns].should have_key(:user)
+      results[:ddns].should have_key(:pwd)
+      results[:ddns].should have_key(:host)
+      results[:ddns].should have_key(:proxy_svr)
+      results[:ddns].should have_key(:proxy_port)
+    end
+    
+    it "groups the mail parameters" do
+      results = Foscam::Client.send(:group_params, @params)
+      results.should have_key(:mail)
+      results[:mail].should have_key(:svr)
+      results[:mail].should have_key(:port)
+      results[:mail].should have_key(:tls)
+      results[:mail].should have_key(:user)
+      results[:mail].should have_key(:pwd)
+      results[:mail].should have_key(:sender)
+      results[:mail].should have_key(:receiver1)
+      results[:mail].should have_key(:receiver2)
+      results[:mail].should have_key(:receiver3)
+      results[:mail].should have_key(:receiver4)
+      results[:mail].should have_key(:inet_ip)
+    end
+    
+    it "groups the ftp parameters" do
+      results = Foscam::Client.send(:group_params, @params)
+      results.should have_key(:ftp)
+      results[:ftp].should have_key(:svr)
+      results[:ftp].should have_key(:port)
+      results[:ftp].should have_key(:user)
+      results[:ftp].should have_key(:pwd)
+      results[:ftp].should have_key(:dir)
+      results[:ftp].should have_key(:mode)
+      results[:ftp].should have_key(:upload_interval)
+      results[:ftp].should have_key(:filename)
+      results[:ftp].should have_key(:numberoffiles)
+      results[:ftp].should have_key(:schedule)
+      results[:ftp][:schedule].should have_key(:enable)
+      results[:ftp][:schedule].should have_key(:sun_0)
+      results[:ftp][:schedule].should have_key(:sun_1)
+      results[:ftp][:schedule].should have_key(:sun_2)
+      results[:ftp][:schedule].should have_key(:mon_0)
+      results[:ftp][:schedule].should have_key(:mon_1)
+      results[:ftp][:schedule].should have_key(:mon_2)
+      results[:ftp][:schedule].should have_key(:tue_0)
+      results[:ftp][:schedule].should have_key(:tue_1)
+      results[:ftp][:schedule].should have_key(:tue_2)
+      results[:ftp][:schedule].should have_key(:wed_0)
+      results[:ftp][:schedule].should have_key(:wed_1)
+      results[:ftp][:schedule].should have_key(:wed_2)      
+      results[:ftp][:schedule].should have_key(:thu_0)
+      results[:ftp][:schedule].should have_key(:thu_1)
+      results[:ftp][:schedule].should have_key(:thu_2)      
+      results[:ftp][:schedule].should have_key(:fri_0)
+      results[:ftp][:schedule].should have_key(:fri_1)
+      results[:ftp][:schedule].should have_key(:fri_2)      
+      results[:ftp][:schedule].should have_key(:sat_0)
+      results[:ftp][:schedule].should have_key(:sat_1)
+      results[:ftp][:schedule].should have_key(:sat_2)
+    end
+    
+    
+    it "groups the alarm parameters" do
+      results = Foscam::Client.send(:group_params, @params)
+      results.should have_key(:alarm)
+      results[:alarm].should have_key(:motion_armed)
+      results[:alarm].should have_key(:motion_sensitivity)
+      results[:alarm].should have_key(:motion_compensation)
+      results[:alarm].should have_key(:input_armed)
+      results[:alarm].should have_key(:ioin_level)
+      results[:alarm].should have_key(:iolinkage)
+      results[:alarm].should have_key(:preset)
+      results[:alarm].should have_key(:ioout_level)
+      results[:alarm].should have_key(:mail)
+      results[:alarm].should have_key(:upload_interval)
+      results[:alarm].should have_key(:http)
+      results[:alarm].should have_key(:msn)
+      results[:alarm].should have_key(:http_url)
+      results[:alarm][:schedule].should have_key(:enable)
+      results[:alarm][:schedule].should have_key(:sun_0)
+      results[:alarm][:schedule].should have_key(:sun_1)
+      results[:alarm][:schedule].should have_key(:sun_2)
+      results[:alarm][:schedule].should have_key(:mon_0)
+      results[:alarm][:schedule].should have_key(:mon_1)
+      results[:alarm][:schedule].should have_key(:mon_2)
+      results[:alarm][:schedule].should have_key(:tue_0)
+      results[:alarm][:schedule].should have_key(:tue_1)
+      results[:alarm][:schedule].should have_key(:tue_2)
+      results[:alarm][:schedule].should have_key(:wed_0)
+      results[:alarm][:schedule].should have_key(:wed_1)
+      results[:alarm][:schedule].should have_key(:wed_2)      
+      results[:alarm][:schedule].should have_key(:thu_0)
+      results[:alarm][:schedule].should have_key(:thu_1)
+      results[:alarm][:schedule].should have_key(:thu_2)      
+      results[:alarm][:schedule].should have_key(:fri_0)
+      results[:alarm][:schedule].should have_key(:fri_1)
+      results[:alarm][:schedule].should have_key(:fri_2)      
+      results[:alarm][:schedule].should have_key(:sat_0)
+      results[:alarm][:schedule].should have_key(:sat_1)
+      results[:alarm][:schedule].should have_key(:sat_2)
+    end
+    
+    it "groups the decoder parameters" do
+      results = Foscam::Client.send(:group_params, @params)
+      results.should have_key(:decoder)
+      results[:decoder].should have_key(:baud)
+    end
+  
+    it "groups the msn parameters" do
+      results = Foscam::Client.send(:group_params, @params)
+      results.should have_key(:msn)
+      results[:msn].should have_key(:user)
+      results[:msn].should have_key(:pwd)
+      results[:msn].should have_key(:friend1)
+      results[:msn].should have_key(:friend2)
+      results[:msn].should have_key(:friend3)
+      results[:msn].should have_key(:friend4)
+      results[:msn].should have_key(:friend5)
+      results[:msn].should have_key(:friend6)
+      results[:msn].should have_key(:friend7)
+      results[:msn].should have_key(:friend8)
+      results[:msn].should have_key(:friend9)
+      results[:msn].should have_key(:friend10)
+    end    
+    
+  end
+
+
 	describe "#snapshot" do
 		context "response is successful" do
 			around(:each) do |spec|
@@ -44,33 +285,12 @@ describe Foscam::Client do
 					spec.run
 				end
 			end
+			
 			it "returns a hash of variables" do
 				response = @service.get_status
-				[:id, :sys_ver, :app_ver, :alias, :now, :tz, :alarm_status, :ddns_status, :ddns_host, :oray_type, :upnp_status, :p2p_status, :p2p_local_port, :msn_status].each do |key|
-					response.should have_key(key) 
-				end
-			end
-
-			it "sets the ddns status string" do
-				response = @service.get_status
-				response[:ddns_status].should be_a_kind_of(String)
-				::Foscam::DDNS_STATUS.values.should include(response[:ddns_status])
-			end
-
-			it "sets the upnp status string" do
-				response = @service.get_status
-				response[:upnp_status].should be_a_kind_of(String)
-				::Foscam::UPNP_STATUS.values.should include(response[:upnp_status])
-			end
-
-			it "sets the alarm status string" do
-				response = @service.get_status
-				response[:alarm_status].should be_a_kind_of(String)
-				::Foscam::ALARM_STATUS.values.should include(response[:alarm_status])
-			end
-			it "sets the time" do
-				response = @service.get_status
-				response[:now].should be_a_kind_of(DateTime)
+        # [:id, :sys_ver, :app_ver, :alias, :now, :tz, :alarm_status, :ddns_status, :ddns_host, :oray_type, :upnp_status, :p2p_status, :p2p_local_port, :msn_status].each do |key|
+        #   response.should have_key(key) 
+        # end
 			end
 		end
 
@@ -83,7 +303,7 @@ describe Foscam::Client do
 			end
 			it "returns a hash of variables" do
 				response = @service.get_status
-				response.should == {}
+				response.should == nil
 			end
 		end
 	end
@@ -96,39 +316,14 @@ describe Foscam::Client do
 					spec.run
 				end
 			end
-			it "returns a hash of variables" do
+			it "returns an instance of ::Foscam::Model::Camera" do
 				response = @service.get_camera_params
-				[:resolution, :brightness, :contrast, :mode, :flip, :fps].each do |key|
-					response.should have_key(key) 
-				end
+				response.should be_an_instance_of (::Foscam::Model::Camera)
+        # [:resolution, :brightness, :contrast, :mode, :flip, :fps].each do |key|
+        #   response.should have_key(key) 
+        # end
 			end
 
-			it "sets the mode as a string" do
-				response = @service.get_camera_params
-				response[:mode].should be_a_kind_of(String)
-				::Foscam::CAMERA_PARAMS_MODE.values.should include(response[:mode])
-			end
-			
-			it "sets the orientation as a string" do
-				response = @service.get_camera_params
-				response[:flip].should be_a_kind_of(String)
-				::Foscam::CAMERA_PARAMS_ORIENTATION.values.should include(response[:flip])
-			end
-
-			it "sets the resolution as a string" do
-				response = @service.get_camera_params
-				response[:resolution].should be_a_kind_of(String)
-				::Foscam::CAMERA_PARAMS_RESOLUTION.values.should include(response[:resolution])
-			end
-
-			it "sets the brightness as a number" do
-				response = @service.get_camera_params
-				response[:brightness].should be_a_kind_of(Integer)
-			end
-			it "sets the contrast as a number" do
-				response = @service.get_camera_params
-				response[:contrast].should be_a_kind_of(Integer)
-			end
 		end
 
 		context "response is unsuccessful" do
@@ -140,7 +335,7 @@ describe Foscam::Client do
 			end
 			it "returns a hash of variables" do
 				response = @service.get_camera_params
-				response.should == {}
+				response.should be_nil
 			end
 		end
 	end
@@ -383,102 +578,66 @@ describe Foscam::Client do
 			end
 			it "returns a hash of variables" do
 				response = @service.get_params
-				[	:id, :sys_ver, :app_ver, :alias, 
-					:now, :tz, :daylight_saving_time, :ntp_enable, :ntp_svr, 
-					:user1_name, :user1_pwd, :user1_pri, 
-					:user2_name, :user2_pwd, :user2_pri, 
-					:user3_name, :user3_pwd, :user3_pri, 
-					:user4_name, :user4_pwd, :user4_pri, 
-					:user5_name, :user5_pwd, :user5_pri, 
-					:user6_name, :user6_pwd, :user6_pri, 
-					:user7_name, :user7_pwd, :user7_pri, 
-					:user8_name, :user8_pwd, :user8_pri, 
-					:dev2_alias, :dev2_host, :dev2_port, :dev2_user, :dev2_pwd, 
-					:dev3_alias, :dev3_host, :dev3_port, :dev3_user, :dev3_pwd, 
-					:dev4_alias, :dev4_host, :dev4_port, :dev4_user, :dev4_pwd, 
-					:dev5_alias, :dev5_host, :dev5_port, :dev5_user, :dev5_pwd, 
-					:dev6_alias, :dev6_host, :dev6_port, :dev6_user, :dev6_pwd, 
-					:dev7_alias, :dev7_host, :dev7_port, :dev7_user, :dev7_pwd, 
-					:dev8_alias, :dev8_host, :dev8_port, :dev8_user, :dev8_pwd, 
-					:dev9_alias, :dev9_host, :dev9_port, :dev9_user, :dev9_pwd, 
-					:ip, :mask, :gateway, :dns, :port, 
-					:wifi_enable, :wifi_ssid, :wifi_encrypt, :wifi_defkey, 
-					:wifi_key1, :wifi_key2, :wifi_key3, :wifi_key4, :wifi_authtype, :wifi_keyformat, 
-					:wifi_key1_bits, :wifi_key2_bits, :wifi_key3_bits, :wifi_key4_bits, :wifi_mode, :wifi_wpa_psk, 
-					:pppoe_enable, :pppoe_user, :pppoe_pwd, :upnp_enable, 
-					:ddns_service, :ddns_user, :ddns_pwd, :ddns_host, :ddns_proxy_svr, :ddns_proxy_port, 
-					:mail_svr, :mail_port, :mail_tls, :mail_user, :mail_pwd, :mail_sender, 
-					:mail_receiver1, :mail_receiver2, :mail_receiver3, :mail_receiver4, :mail_inet_ip, 
-					:ftp_svr, :ftp_port, :ftp_user, :ftp_pwd, :ftp_dir, :ftp_mode, :ftp_upload_interval, :ftp_filename, :ftp_numberoffiles, :ftp_schedule_enable, 
-					:ftp_schedule,:alarm_motion_armed, :alarm_motion_sensitivity, :alarm_motion_compensation, 
-					:alarm_input_armed, :alarm_ioin_level, :alarm_iolinkage, :alarm_preset, :alarm_ioout_level, :alarm_mail, :alarm_upload_interval, :alarm_http, :alarm_msn, :alarm_http_url, :alarm_schedule_enable, 
-					:alarm_schedule,:decoder_baud, :msn_user, :msn_pwd, 
-					:msn_friend1, :msn_friend2, :msn_friend3, :msn_friend4, :msn_friend5, :msn_friend6, :msn_friend7, :msn_friend8, :msn_friend9, :msn_friend10
-				].each do |key|
+				[	:device, :ntp, :users, :network, :pppoe, :mail, :upnp, :wifi, :alarm, :ftp, :msn].each do |key|
 					response.should have_key(key) 
 				end
 			end
-			it "sets now as datetime" do
-				response = @service.get_params
-				response[:now].should be_a_kind_of(DateTime)
-			end
-			it "sets the daylight_savings_time as a number" do
-				response = @service.get_params
-				response[:daylight_savings_time].should be_a_kind_of(Integer)
-			end
-			it "sets ntp_enable as a Boolean" do
-				response = @service.get_params
-				response[:ntp_enable].should be_a_kind_of(Boolean)
+			
+			it "device is an instance of Device" do
+				response = @service.get_params				
+				response[:device].should be_an_instance_of(::Foscam::Model::Device)
 			end
 
-			it "sets user privilages as a USER_PRIVILAGE" do
+			it "ntp is an instance of NtpServer" do
+				response = @service.get_params				
+				response[:ntp].should be_an_instance_of(::Foscam::Model::NtpServer)
+			end
+			
+			it "returns an array of users" do
+				response = @service.get_params				
+				response[:users].should be_a_kind_of(Array)
+				response[:users].each do |user|
+				  user.should be_an_instance_of(::Foscam::Model::User)
+			  end
+			end
+			
+			it "network is an instance of Network" do
 				response = @service.get_params
-				[:user1_pri, :user2_pri, :user3_pri, :user4_pri, :user5_pri, :user6_pri, :user7_pri, :user8_pri].each do |key|
-					response[key].should be_a_kind_of(Symbol)
-					::Foscam::USER_PERMISSIONS.values.should include(response[key])
-				end
+        response[:network].should be_an_instance_of(::Foscam::Model::Network)
 			end
 
-			it "sets the ports as a number" do
+			it "network is an instance of MailServer" do
 				response = @service.get_params
-				[:ddns_proxy_port, :ftp_port, :mail_port, :port, :dev2_port, :dev3_port, :dev4_port, :dev5_port, :dev6_port, :dev7_port, :dev8_port, :dev9_port].each do |key|
-					response[key].should be_a_kind_of(Integer)
-				end
+        response[:mail].should be_an_instance_of(::Foscam::Model::MailServer)
+			end
+			
+			it "wifi is an instance of WifiConfig" do
+				response = @service.get_params
+        response[:wifi].should be_an_instance_of(::Foscam::Model::WifiConfig)
 			end
 
-			it "sets wifi_enable as a boolean" do
+			it "alarm is an instance of AlarmConfig" do
 				response = @service.get_params
-				response[:wifi_enable].should be_a_kind_of(Boolean)
+        response[:alarm].should be_an_instance_of(::Foscam::Model::AlarmConfig)
+        response[:alarm].schedule.should be_an_instance_of(::Foscam::Schedule::Week)
 			end
-
-			it "sets pppoe_enable as a boolean" do
+			
+			it "ftp is an instance of FtpServer" do
 				response = @service.get_params
-				response[:pppoe_enable].should be_a_kind_of(Boolean)
+        response[:ftp].should be_an_instance_of(::Foscam::Model::FtpServer)
+        response[:ftp].schedule.should be_an_instance_of(::Foscam::Schedule::Week)
 			end
-			it "sets upnp_enable as a boolean" do
+			
+			it "msn is an instance of Msn" do
 				response = @service.get_params
-				response[:upnp_enable].should be_a_kind_of(Boolean)
+        response[:msn].should be_an_instance_of(::Foscam::Model::Msn)
 			end
-
-			it "sets alarm_schedule_enable as a boolean" do
+			
+			it "ddns is an instance of Ddns" do
 				response = @service.get_params
-				response[:alarm_schedule_enable].should be_a_kind_of(Boolean)
+        response[:ddns].should be_an_instance_of(::Foscam::Model::Ddns)
 			end
-
-			it "sets ftp_schedule_enable as a boolean" do
-				response = @service.get_params
-				response[:ftp_schedule_enable].should be_a_kind_of(Boolean)
-			end
-
-			it "sets the ftp_schedule as an Week" do
-				response = @service.get_params
-				response[:ftp_schedule].should be_an_instance_of(Foscam::Schedule::Week)
-			end
-
-			it "sets the alarm_schedule as an Week" do
-				response = @service.get_params
-				response[:alarm_schedule].should be_an_instance_of(Foscam::Schedule::Week)
-			end
+				
 		end
 
 		context "response is unsuccessful" do

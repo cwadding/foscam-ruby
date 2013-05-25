@@ -1,136 +1,40 @@
 require 'spec_helper'
 
 describe Foscam::Model::Device do
+  before(:each) do
+    @device = Foscam::Model::Device.new(:id=>"000DC5D4DC51", :sys_ver=>"11.22.2.38", :app_ver=>"2.4.18.17", :alias=>"", :now=>"1352782970", :tz=>"18000", :daylight_saving_time=>"0", :alarm_status => "0", :ddns_status => "0", :upnp_status => "0")
+  end
 
-	def valid_params
-		{:url => "http://192.168.0.1/", :username => "foobar", :password => "secret"}
-	end
-	before(:each) do
-		@client = ::Foscam::Client.new(valid_params)
-		@client.stub(:get_camera_params).and_return({:resolution => "qvga", :brightness => 169, :contrast => 2, :mode => "60hz", :flip => "flip", :fps => 0})
-	end
-
-	describe "#client=" do
-		before(:each) do
-			@device = Foscam::Model::Device.instance
-		end
-		it "sets the current Foscam::Client" do
-			@device.client = @client
-			@device.client.should eql(@client)
-		end
-
-		it "sets the camera parameters" do
-			@device.client = @client
-			@device.resolution.should == "qvga"
-			@device.brightness.should == 169
-			@device.contrast.should == 2
-			# @device.mode.should == "60Hz"
-			# @device.orientation.should == "default"
-		end
+  it "responds to string parameters" do
+    [:id, :sys_ver, :app_ver, :alias].each do |method|
+  	  @device.send(method).should be_an_instance_of(String)
+	  end
+  end
+  it "sets now as datetime" do
+		@device.time.should be_a_kind_of(ActiveSupport::TimeWithZone)
 	end
 
-	describe "#capture" do
-		before(:each) do
-			# @client.stub(:get_params).and_return(one_device_response)
-			@device = Foscam::Model::Device.instance
-		end
-		context "request is successful" do
-			it "returns an image" do
-				@client.should_receive(:snapshot)
-				@device.client = @client
-				image = @device.capture
-			end
-		end
+  it "sets boolean fields" do
+    [:daylight_saving_time].each do |method|
+      @device.send(method).should be_a_kind_of(Boolean)
+    end
+  end
+  
+  
+	it "sets the ddns status string" do
+		@device.ddns_status.should be_a_kind_of(String)
+		::Foscam::Model::Device::DDNS_STATUS.values.should include(@device.ddns_status)
 	end
 
-
-				# def action(value)
-				# 	# have an action map to map some subset to the foscam set
-				# 	@client.decoder_control(value)
-				# end
-	describe "#action" do
-		before(:each) do
-			# @client.stub(:get_params).and_return(one_device_response)
-			@device = Foscam::Model::Device.instance
-		end
-		context "request is successful" do
-			before(:each) do
-				@client.stub(:decoder_control).and_return(true)
-			end
-			it "processes the action" do
-				@client.should_receive(:decoder_control).with(:up).once
-				@device.client = @client
-				flag = @device.action(:up)
-				flag.should be_true
-			end
-		end
+	it "sets the upnp status string" do
+		@device.upnp_status.should be_a_kind_of(String)
+		::Foscam::Model::Device::UPNP_STATUS.values.should include(@device.upnp_status)
 	end
 
-	describe "#save" do
-		before(:each) do
-			# @client.stub(:get_params).and_return(one_device_response)
-			@device = Foscam::Model::Device.instance
-		end
-		context "with valid params" do
-			before(:each) do 
-				@device.stub(:is_valid?).and_return(true)
-			end
-			context "is dirty" do
-				before(:each) do
-					params = {:resolution => "vga", :brightness => 230, :contrast => 3}
-					# @device.stub(:changed?).and_return(true)
-					@client.should_receive(:camera_control).with(params).once
-				end
-				context "request is successful" do
-					before(:each) do
-						@client.stub(:camera_control).and_return(true)
-					end
-					it "updates the device attributes that changed" do
-						@device.client = @client
-						@device.brightness = 230
-						@device.contrast = 3
-						@device.resolution = "vga"
-						flag = @device.save
-						flag.should be_true
-					end
-				end
-				context "request is unsuccessful" do
-					before(:each) do
-						@client.stub(:camera_control).and_return(false)
-					end
-					it "fails to update the device attributes" do
-						@device.client = @client
-						@device.brightness = 230
-						@device.contrast = 3
-						@device.resolution = "vga"
-						flag = @device.save
-						flag.should be_false
-					end
-				end
-			end
-			context "is not dirty" do
-				before(:each) do
-					@device.stub(:changed?).and_return(false)						
-				end
-				it "skips updating since nothing changed" do
-					@client.should_not_receive(:camera_control)
-					@device.client = @client
-					flag = @device.save
-					flag.should be_false
-				end
-			end
-		end
-		context "with invalid params" do
-			before(:each) do
-				@device.stub(:is_valid?).and_return(false)
-			end
-			it "skips updating since nothing changed" do
-				@client.should_not_receive(:camera_control)
-				@device.client = @client
-				flag = @device.save
-				flag.should be_false
-			end
-		end
+	it "sets the alarm status string" do
+		@device.alarm_status.should be_a_kind_of(String)
+		::Foscam::Model::Device::ALARM_STATUS.values.should include(@device.alarm_status)
 	end
 
+  
 end

@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'mini_magick'
   spec.add_dependency 'activesupport'
   spec.add_dependency 'activemodel'
+  spec.add_dependency 'tzinfo'
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"

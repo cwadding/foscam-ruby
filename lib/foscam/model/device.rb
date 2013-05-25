@@ -1,96 +1,68 @@
 
 module Foscam
 	module Model
-		class Device < Base
-			include Singleton
+		class Device
+		  
+    	DDNS_STATUS = {
+    		0 => "No Action",
+    		1 => "It's connecting...",
+    		2 => "Can't connect to the Server",
+    		3 => "Dyndns Succeed",
+    		4 => "DynDns Failed: Dyndns.org Server Error",
+    		5 => "DynDns Failed: Incorrect User or Password",
+    		6 => "DynDns Failed: Need Credited User",
+    		7 => "DynDns Failed: Illegal Host Format",
+    		8 => "DynDns Failed: The Host Does not Exist",
+    		9 => "DynDns Failed: The Host Does not Belong to You",
+    		10 => "DynDns Failed: Too Many or Too Few Hosts",
+    		11 => "DynDns Failed: The Host is Blocked for Abusing",
+    		12 => "DynDns Failed: Bad Reply from Server",
+    		13 => "DynDns Failed: Bad Reply from Server",
+    		14 => "Oray Failed: Bad Reply from Server",
+    		15 => "Oray Failed: Incorrect User or Password",
+    		16 => "Oray Failed: Incorrect Hostname",
+    		17 => "Oray Succeed"
+    	}
 
-			define_model_callbacks :save
+    	# UPNP_STATUS
+    	UPNP_STATUS = {
+    		0 => "No Action",
+    		1 => "Succeed",
+    		2 => "Device System Error",
+    		3 => "Errors in Network Communication",
+    		4 => "Errors in Chat with UPnP Device",
+    		5 => "Rejected by UPnP Device, Maybe Port Conflict"
+    	}
 
-			# attr_accessor :name (get_params, set_alias)
-			# attr_accessor :name (get_misc, set_misc)
-			attr_reader :resolution, :brightness, :contrast, :orientation
+    	# ALARM_STATUS
+    	ALARM_STATUS = {
+    		0 => "No alarm",
+    		1 => "Motion alarm",
+    		2 => "Input Alarm"
+    	}
+      
+      # 	* :now (DateTime) The current time on the camera
+  		# 	* :alarm_status (String) Returns an Alarm status
+  		# 	* :ddns_status (String) Returns an UPNP status
+  		# 	* :upnp_status (String) Returns an DDNS status
+  		
+			attr_reader :id, :sys_ver, :app_ver, :alias, :time, :daylight_saving_time, :alarm_status, :ddns_status, :ddns_host, :oray_type, :upnp_status, :p2p_status, :p2p_local_port, :msn_status, :http_url
 
-			def resolution=(val)
-				resolution_will_change! unless val == @resolution
-				@resolution = val
-			end
+      def initialize(args = {})
+  			@ddns_status = DDNS_STATUS[args[:ddns_status].to_i] if args.has_key?(:ddns_status) && !args[:ddns_status].nil?
+  			@upnp_status = UPNP_STATUS[args[:upnp_status].to_i] if args.has_key?(:upnp_status) && !args[:upnp_status].nil?
+  			@alarm_status = ALARM_STATUS[args[:alarm_status].to_i] if args.has_key?(:alarm_status) && !args[:alarm_status].nil?
+  			@time = Time.find_zone(-args[:tz].to_i).at(args[:now].to_i) if args.has_key?(:now) && !args[:now].nil?
+  			[:id, :sys_ver, :app_ver, :alias].each do |field|
+      	  self.instance_variable_set("@#{field}".to_sym, args[field])
+    	  end
+    	  [:daylight_saving_time].each do |field|
+    	    self.instance_variable_set("@#{field}".to_sym, args[field].to_i > 0)
+        end
+        
+		  end
+			
 
-			def brightness=(val)
-				brightness_will_change! unless val == @brightness
-				@brightness = val
-			end
-
-			def contrast=(val)
-				contrast_will_change! unless val == @contrast
-				@contrast = val
-			end
-
-			def orientation=(val)
-				orientation_will_change! unless val == @orientation
-				@orientation = val
-			end
-
-			def client=(obj)
-				unless obj.nil?
-					Device::client = obj
-					cam_params = client.get_camera_params
-					unless cam_params.empty?
-						@resolution = cam_params[:resolution]
-						@brightness = cam_params[:brightness]
-						@contrast = cam_params[:contrast]
-						@orientation = cam_params[:flip]
-						# mode
-					end
-				end
-			end
-
-			def stream_url
-				client.videostream
-			end
-
-			define_attribute_methods [:resolution, :brightness, :contrast, :orientation]
-
-			##
-			# Save the current device
-			# @return [FalseClass, TrueClass] Whether or not the device was successfully saved
-			def save
-				run_callbacks :save do
-					flag = false
-					if changed? && is_valid?
-						@previously_changed = changes
-						flag = client.camera_control(dirty_params_hash)
-						@changed_attributes.clear if flag
-					end
-					flag
-				end
-			end
-
-			##
-			# Capture the current image
-			# @return [nil, ::MiniMagick::Image]
-			def capture
-				client.snapshot
-			end
-
-			##
-			# Preform a decoder action 
-			# @param value [Symbol] The desired motion action to be sent to the camera
-			# @return [FalseClass,TrueClass] whether the request was successful.
-			def action(value)
-				# have an action map to map some subset to the foscam set
-				client.decoder_control(value)
-			end
-
-			private
-
-			def dirty_params_hash
-				h = {}
-				h.merge!({:resolution => @resolution}) if resolution_changed?
-				h.merge!({:brightness => @brightness}) if brightness_changed?
-				h.merge!({:contrast => @contrast}) if contrast_changed?
-				h.merge!({:flip => @orientation}) if orientation_changed?
-				h
-			end
 		end
 	end
 end

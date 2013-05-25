@@ -1,135 +1,29 @@
 require 'spec_helper'
 
 describe Foscam::Model::FtpServer do
-
-	def valid_client_params
-		{:url => "http://192.168.0.1/", :username => "foobar", :password => "secret"}
-	end
-
-	def default_get_params
-		{
-			:ftp_svr  => "192.168.0.148",
-			:ftp_port  => 21,
-			:ftp_user  => "foobar",
-			:ftp_pwd  => "secret",
-			:ftp_dir  => "foscam",
-			:ftp_mode  => 1,
-			:ftp_upload_interval  => 0,
-			:ftp_filename  => "",
-			:ftp_numberoffiles => 5,
-			:ftp_schedule_enable => false,
-			:ftp_schedule => Foscam::Schedule::Week.new
-		}
-	end
-
-	before(:each) do
-		@client = ::Foscam::Client.new(valid_client_params)
-		@client.stub(:get_params).and_return(default_get_params)
-	end
-
-
-	describe "#client=" do
-		before(:each) do
-			@ftp = Foscam::Model::FtpServer.instance
-		end
-		it "sets the current Foscam::Client" do
-			@ftp.client = @client
-			@ftp.client.should eql(@client)
-		end
-
-		it "sets the ftp parameters" do
-			@ftp.client = @client
-			@ftp.dir.should == default_get_params[:ftp_dir]
-			@ftp.address.should == default_get_params[:ftp_svr]
-			@ftp.port.should == default_get_params[:ftp_port]
-			@ftp.username.should == default_get_params[:ftp_user]
-			@ftp.password.should == default_get_params[:ftp_pwd]
-			@ftp.upload_interval.should == default_get_params[:ftp_upload_interval]
-		end
-	end
-
-	describe "#save" do
-		before(:each) do
-			# @client.stub(:get_params).and_return(one_device_response)
-			@ftp = Foscam::Model::FtpServer.instance
-		end
-		context "with valid params" do
-			before(:each) do 
-				@ftp.stub(:is_valid?).and_return(true)
-			end
-			context "is dirty" do
-				context "request is successful" do
-					before(:each) do
-						params = {:dir => "path/root/", :user => "foobar1", :pwd => "secret1", :svr => "192.168.0.2", :port => 21,:upload_interval => 0}
-						# @ftp.stub(:changed?).and_return(true)
-						@client.should_receive(:set_ftp).with(params).once
-						@client.stub(:set_ftp).and_return(true)
-					end
-					it "updates the ftp attributes that changed" do
-						@ftp.client = @client
-						@ftp.username = "foobar1"
-						@ftp.password = "secret1"
-						@ftp.dir = "path/root/"
-						@ftp.address = "192.168.0.2"
-						flag = @ftp.save
-						flag.should be_true
-					end
-				end
-				context "request is unsuccessful" do
-					before(:each) do
-						params = {:dir => "path/root/", :user => "foobar1", :pwd => "secret1", :svr => "192.168.0.2"}
-						# @ftp.stub(:changed?).and_return(true)
-						@client.should_receive(:set_ftp).with(params).once
-						@client.stub(:set_ftp).and_return(false)
-					end
-					it "fails to update the device attributes" do
-						@ftp.client = @client
-						@ftp.username = "foobar1"
-						@ftp.password = "secret1"
-						@ftp.dir = "path/root/"
-						@ftp.address = "192.168.0.2"
-						flag = @ftp.save
-						flag.should be_false
-					end
-				end
-			end
-			context "is not dirty" do
-				before(:each) do
-					@ftp.stub(:changed?).and_return(false)						
-				end
-				it "skips updating since nothing changed" do
-					@client.should_not_receive(:set_ftp)
-					@ftp.client = @client
-					flag = @ftp.save
-					flag.should be_false
-				end
-			end
-		end
-		context "with invalid params" do
-			before(:each) do
-				@ftp.stub(:is_valid?).and_return(false)
-			end
-			it "skips updating since nothing changed" do
-				@client.should_not_receive(:set_ftp)
-				@ftp.client = @client
-				flag = @ftp.save
-				flag.should be_false
-			end
-		end
-	end
-
-	describe "#clear" do
-		before(:each) do
-			@ftp = Foscam::Model::FtpServer.instance
-		end			
-		it "should save the user with blank usernames, password and privileges" do
-			params = {:dir => "", :user => "", :pwd => "", :svr => "", :port => 21, :upload_interval => 0}
-			@client.stub(:set_ftp).with(params).and_return(true)
-			@client.should_receive(:set_ftp).with(params).once
-			@ftp.client = @client
-			flag = @ftp.clear
-			flag.should be_true
-		end
-	end	
-
+  before(:each) do
+    @ftp = Foscam::Model::FtpServer.new(:svr=>"192.168.0.148", :port=>"21", :user=>"my_username", :pwd=>"secret", :dir=>"R2D2", :mode=>"1", :upload_interval=>"0", :filename=>"", :numberoffiles=>"0", 
+      :schedule=>{:enable=>"0", :sun_0=>"0", :sun_1=>"0", :sun_2=>"0", :mon_0=>"0", :mon_1=>"0", :mon_2=>"0", :tue_0=>"0", :tue_1=>"0", :tue_2=>"0", :wed_0=>"0", :wed_1=>"0", :wed_2=>"0", :thu_0=>"0", :thu_1=>"0", :thu_2=>"0", :fri_0=>"0", :fri_1=>"0", :fri_2=>"0", :sat_0=>"0", :sat_1=>"0", :sat_2=>"0"}
+      )
+  end
+  
+  it "sets string fields" do
+    [:svr, :user, :pwd, :dir, :filename].each do |method|
+      @ftp.send(method).should be_a_kind_of(String)
+    end
+  end
+  it "sets fixnum fields" do
+    [:port, :upload_interval, :mode, :numberoffiles].each do |method|
+      @ftp.send(method).should be_a_kind_of(Fixnum)
+    end
+  end
+  it "sets the alarm_schedule as an Week" do
+  	@ftp.schedule.should be_an_instance_of(Foscam::Schedule::Week)
+  end
+  
+  it "responds to http_url as string" do
+    [:schedule_enable].each do |method|
+      @ftp.send(method).should be_a_kind_of(Boolean)
+    end
+  end
 end
