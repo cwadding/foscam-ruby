@@ -1,25 +1,15 @@
 require 'spec_helper'
 
 describe Foscam::Model::Device do
-  before(:each) do
-    @device = Foscam::Model::Device.new(:id=>"000DC5D4DC51", :sys_ver=>"11.22.2.38", :app_ver=>"2.4.18.17", :alias=>"", :now=>"1352782970", :tz=>"18000", :daylight_saving_time=>"0", :alarm_status => "0", :ddns_status => "0", :upnp_status => "0")
-  end
-
-  it "responds to string parameters" do
-    [:id, :sys_ver, :app_ver, :alias].each do |method|
-  	  @device.send(method).should be_an_instance_of(String)
-	  end
-  end
-  it "sets now as datetime" do
-		@device.time.should be_a_kind_of(ActiveSupport::TimeWithZone)
+	before(:each) do
+		@device = Foscam::Model::Device.new(:id=>"000DC5D4DC51", :sys_ver=>"11.22.2.38", :app_ver=>"2.4.18.17", :alias=>"", :alarm_status => "0", :ddns_status => "0", :upnp_status => "0")
 	end
 
-  it "sets boolean fields" do
-    [:daylight_saving_time].each do |method|
-      @device.send(method).should be_a_kind_of(Boolean)
-    end
-  end
-  
+	it "responds to string parameters" do
+		[:id, :sys_ver, :app_ver, :alias].each do |method|
+			@device.send(method).should be_an_instance_of(String)
+		end
+	end  
   
 	it "sets the ddns status string" do
 		@device.ddns_status.should be_a_kind_of(String)

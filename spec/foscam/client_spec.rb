@@ -50,16 +50,16 @@ describe Foscam::Client do
       results[:device].should have_key(:sys_ver)
       results[:device].should have_key(:app_ver)
       results[:device].should have_key(:alias)
-      results[:device].should have_key(:now)
-      results[:device].should have_key(:tz)
-      results[:device].should have_key(:daylight_saving_time)
     end
     
-    it "groups the ntp parameters" do
+    it "groups the clock parameters" do
       results = Foscam::Client.send(:group_params, @params)
-      results.should have_key(:ntp)
-      results[:ntp].should have_key(:enable)
-      results[:ntp].should have_key(:svr)
+      results.should have_key(:clock)
+      results[:clock].should have_key(:ntp_enable)
+      results[:clock].should have_key(:ntp_svr)
+      results[:clock].should have_key(:now)
+      results[:clock].should have_key(:tz)
+      results[:clock].should have_key(:daylight_saving_time)
     end
     
     it "groups the user parameters" do
@@ -578,7 +578,7 @@ describe Foscam::Client do
 			end
 			it "returns a hash of variables" do
 				response = @service.get_params
-				[	:device, :ntp, :users, :network, :pppoe, :mail, :upnp, :wifi, :alarm, :ftp, :msn].each do |key|
+				[	:device, :clock, :users, :network, :pppoe, :mail, :upnp, :wifi, :alarm, :ftp, :msn].each do |key|
 					response.should have_key(key) 
 				end
 			end
@@ -588,9 +588,9 @@ describe Foscam::Client do
 				response[:device].should be_an_instance_of(::Foscam::Model::Device)
 			end
 
-			it "ntp is an instance of NtpServer" do
+			it "clock is an instance of Clock" do
 				response = @service.get_params				
-				response[:ntp].should be_an_instance_of(::Foscam::Model::NtpServer)
+				response[:clock].should be_an_instance_of(::Foscam::Model::Clock)
 			end
 			
 			it "returns an array of users" do
@@ -654,29 +654,27 @@ describe Foscam::Client do
 		end
 	end
 
-	# describe "#upgrade_firmware" do
-	# 	around(:each) do |spec|
-	# 		::VCR.use_cassette("foscam_upgrade_firmware") do
-	# 			spec.run
-	# 		end
-	# 	end
-	# 	it "" do
-	# 		@service.upgrade_firmware
-	# 	end
+	describe "#upgrade_firmware" do
+		around(:each) do |spec|
+			::VCR.use_cassette("foscam_upgrade_firmware") do
+				spec.run
+			end
+		end
+		it "returns true when successful" do
+			@service.upgrade_firmware.should be_true
+		end
+	end
 
-	# end
-
-	# describe "#upgrade_htmls" do
-	# 	around(:each) do |spec|
-	# 		VCR.use_cassette("foscam_upgrade_htmls") do
-	# 			spec.run
-	# 		end
-	# 	end
-	# 	it "" do
-	# 		@service.upgrade_htmls
-	# 	end
-		
-	# end
+	describe "#upgrade_htmls" do
+		around(:each) do |spec|
+			VCR.use_cassette("foscam_upgrade_htmls") do
+				spec.run
+			end
+		end
+		it "returns true when successful" do
+			@service.upgrade_htmls.should be_true
+		end
+	end
 
 	describe "#set_alias" do
 		context "with valid parameters" do
@@ -721,9 +719,9 @@ describe Foscam::Client do
 					spec.run
 				end
 			end
-			it "returns a hash of variables" do
-				params = {:tz =>18000, :ntp_enable => 1, :ntp_svr => "0.ca.pool.ntp.org"}
-				response = @service.set_datetime(params)
+			it "sets the datetime settings" do
+				clock = Foscam::Model::Clock.new({:now => 1352782970, :tz =>18000, :ntp_enable => 1, :ntp_svr => "0.ca.pool.ntp.org"})
+				response = @service.set_datetime(clock)
 				response.should be_true
 			end
 		end
@@ -741,8 +739,8 @@ describe Foscam::Client do
 				@connection.stub(:get).with('set_datetime.cgi?').and_return(response)
 				@service.connection = @connection
 			end
-			it "returns a hash of variables" do
-				response = @service.set_datetime({})
+			it "returns a false" do
+				response = @service.set_datetime(Foscam::Model::Clock.new)
 				response.should be_false
 			end
 		end
@@ -753,68 +751,68 @@ describe Foscam::Client do
 		context "with valid parameters" do
 			it "sets user 2 name, password, and privilages" do
 				::VCR.use_cassette("foscam_set_user2") do
-					params = {:user2 => "user2", :pwd2 => "pass2", :pri2 => 0}
-					response = @service.set_users(params)
+          user = Foscam::Model::User.new({:id => 2, :name => "user2", :pwd => "pass2", :pri => 0})
+					response = @service.set_users([user])
 					response.should be_true
 				end
 			end
 
 			it "sets user 3 name, password, and privilages" do
 				::VCR.use_cassette("foscam_set_user3") do
-					params = {:user3 => "user3", :pwd3 => "pass3", :pri3 => 0}
-					response = @service.set_users(params)
+					user = Foscam::Model::User.new({:id => 3, :name => "user3", :pwd => "pass3", :pri => 0})
+					response = @service.set_users([user])
 					response.should be_true
 				end
 			end
 
 			it "sets user 4 name, password, and privilages" do
 				::VCR.use_cassette("foscam_set_user4") do
-					params = {:user4 => "user4", :pwd4 => "pass4", :pri4 => 0}
-					response = @service.set_users(params)
+					user = Foscam::Model::User.new({:id => 4, :name => "user4", :pwd => "pass4", :pri => 0})
+					response = @service.set_users([user])
 					response.should be_true
 				end
 			end
 
 			it "sets user 5 name, password, and privilages" do
 				::VCR.use_cassette("foscam_set_user5") do
-					params = {:user5 => "user5", :pwd4 => "pass5", :pri5 => 0}
-					response = @service.set_users(params)
+					user = Foscam::Model::User.new({:id => 5, :name => "user5", :pwd => "pass5", :pri => 0})
+					response = @service.set_users([user])
 					response.should be_true
 				end
 			end
 
 			it "sets user 6 name, password, and privilages" do
 				::VCR.use_cassette("foscam_set_user6") do
-					params = {:user6 => "user6", :pwd6 => "pass6", :pri6 => 0}
-					response = @service.set_users(params)
+					user = Foscam::Model::User.new({:id => 6, :name => "user6", :pwd => "pass6", :pri => 0})
+					response = @service.set_users([user])
 					response.should be_true
 				end
 			end
 
 			it "sets user 7 name, password, and privilages" do
 				::VCR.use_cassette("foscam_set_user7") do
-					params = {:user7 => "user7", :pwd7 => "pass7", :pri7 => 0}
-					response = @service.set_users(params)
+					user = Foscam::Model::User.new({:id => 7, :name => "user7", :pwd => "pass7", :pri => 0})
+					response = @service.set_users([user])
 					response.should be_true
 				end
 			end
 
 			it "sets user 8 name, password, and privilages" do
 				::VCR.use_cassette("foscam_set_user8") do
-					params = {:user8 => "user8", :pwd7 => "pass8", :pri8 => 0}
-					response = @service.set_users(params)
+					user = Foscam::Model::User.new({:id => 8, :name => "user8", :pwd => "pass8", :pri => 0})
+					response = @service.set_users([user])
 					response.should be_true
 				end
 			end		
 		end
 
-		context "with invalid parameters" do
-			it "raises an exception when username or password is more than 12 characters long" do
-				[:user1, :pwd1, :user2, :pwd2, :user3, :pwd3, :user4, :pwd4, :user5, :pwd5, :user6, :pwd6, :user7, :pwd7, :user8, :pwd8].each do |key|
-					expect {@service.set_users(key => "0123456789123")}.to raise_error
-				end
-			end
-		end
+		# context "with invalid parameters" do
+		# 	it "raises an exception when username or password is more than 12 characters long" do
+		# 		[:user1, :pwd1, :user2, :pwd2, :user3, :pwd3, :user4, :pwd4, :user5, :pwd5, :user6, :pwd6, :user7, :pwd7, :user8, :pwd8].each do |key|
+		# 			expect {@service.set_users(key => "0123456789123")}.to raise_error
+		# 		end
+		# 	end
+		# end
 
 		context "response is unsuccessful" do
 			before(:each) do
@@ -824,7 +822,7 @@ describe Foscam::Client do
 				@service.connection = @connection
 			end
 			it "returns a hash of variables" do
-				response = @service.set_users({})
+				response = @service.set_users([])
 				response.should be_false
 			end
 		end
@@ -852,8 +850,8 @@ describe Foscam::Client do
 				end
 			end
 			it "returns a hash of variables" do
-				params = {:ip => "192.168.0.100", :mask => "0.0.0.0", :gateway => "0.0.0.0", :dns => "8.8.8.8", :port => "8080"}
-				response = @service.set_network(params)
+				network = Foscam::Model::Network.new({:ip => "192.168.0.100", :mask => "0.0.0.0", :gateway => "0.0.0.0", :dns => "8.8.8.8", :port => "8080"})
+				response = @service.set_network(network)
 				response.should be_true
 			end
 		end
@@ -866,8 +864,7 @@ describe Foscam::Client do
 				@service.connection = @connection
 			end
 			it "returns a hash of variables" do
-				params = {}
-				response = @service.set_network(params)
+				response = @service.set_network(Foscam::Model::Network.new)
 				response.should be_false
 			end
 		end
@@ -882,8 +879,8 @@ describe Foscam::Client do
 				end
 			end
 			it "returns a hash of variables" do
-				params = {:ssid => "my_wireless_ssid", :enable => 1, :encrypt => 1, :wpa_psk => "my_wireless_password"}
-				response = @service.set_wifi(params)
+				wifi = Foscam::Model::WifiConfig.new({:ssid => "my_wireless_ssid", :enable => 1, :encrypt => 1, :wpa_psk => "my_wireless_password"})
+				response = @service.set_wifi(wifi)
 				response.should be_true
 			end
 		end

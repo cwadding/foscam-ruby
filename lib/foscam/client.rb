@@ -54,7 +54,7 @@ module Foscam
 		def get_status
 			response = @connection.get('get_status.cgi')
 			params = response.success? ? parse_response(response) : {}
-      params.empty? ? nil : ::Foscam::Model::Device.new(params)
+			params.empty? ? nil : ::Foscam::Model::Device.new(params)
 		end
 
 
@@ -72,7 +72,7 @@ module Foscam
 		def get_camera_params
 			response = @connection.get('get_camera_params.cgi')
 			params = response.success? ? parse_response(response) : {}
-      params.empty? ? nil : ::Foscam::Model::Camera.new(params)
+			params.empty? ? nil : ::Foscam::Model::Camera.new(params)
 		end
 
 		##
@@ -270,59 +270,57 @@ module Foscam
 			params = response.success? ? parse_response(response) : {}
       
 			result = {}
-      unless params.empty?
-        result = Client.group_params(params)
-        result[:device] = ::Foscam::Model::Device.new( result[:device] )
-        result[:ntp] = ::Foscam::Model::NtpServer.new( result[:ntp] )
-        result[:ddns] = ::Foscam::Model::Ddns.new( result[:ddns] )
-        result[:network] = ::Foscam::Model::Network.new( result[:network] )
-        result[:mail] = ::Foscam::Model::MailServer.new( result[:mail] )
-        result[:wifi] = ::Foscam::Model::WifiConfig.new( result[:wifi] )
-        result[:ftp] = ::Foscam::Model::FtpServer.new( result[:ftp] )
-        result[:alarm] = ::Foscam::Model::AlarmConfig.new( result[:alarm] )
-        result[:msn] = ::Foscam::Model::Msn.new( result[:msn] )
-        users = []
-        result[:users].each do |id, user|
-          user.merge!(:id => id)
-          users << ::Foscam::Model::User.new(user)
-        end
-        result[:users] = users
+			unless params.empty?
+				result = Client.group_params(params)
+				result[:device] = ::Foscam::Model::Device.new( result[:device] )
+				result[:clock] = ::Foscam::Model::Clock.new( result[:clock] )
+				result[:ddns] = ::Foscam::Model::Ddns.new( result[:ddns] )
+				result[:network] = ::Foscam::Model::Network.new( result[:network] )
+				result[:mail] = ::Foscam::Model::MailServer.new( result[:mail] )
+				result[:wifi] = ::Foscam::Model::WifiConfig.new( result[:wifi] )
+				result[:ftp] = ::Foscam::Model::FtpServer.new( result[:ftp] )
+				result[:alarm] = ::Foscam::Model::AlarmConfig.new( result[:alarm] )
+				result[:msn] = ::Foscam::Model::Msn.new( result[:msn] )
+				users = []
+				result[:users].each do |id, user|
+				user.merge!(:id => id)
+				users << ::Foscam::Model::User.new(user)
+				end
+				result[:users] = users
         
-        # :pppoe
-        # :upnp
-        # :ddns
-        # :decoder
+		        # :pppoe
+		        # :upnp
+		        # :ddns
+		        # :decoder
+				# 
+				#   [:daylight_savings_time, :ddns_proxy_port, :ftp_port, :mail_port, :port, :dev2_port, :dev3_port, :dev4_port, :dev5_port, :dev6_port, :dev7_port, :dev8_port, :dev9_port].each do |field|
+				#     response[field] = response[field].to_i
+				#   end
+				#   response[:users] = {}
+				# 
+				#         # Device
+				# 
+				#         # Users
+				#   ::Foscam::Model::User::MAX_NUMBER.times do |i|
+				#     unless response.has_key?("user#{i}_name") && response["user#{i+1}_name"].empty?
+				#       response[:users] << ::Foscam::Model::User.new({:id => i+1, :username => response["user#{i+1}_name"], :password => response["user#{i+1}_pwd"], :privilage => response["user#{i+1}_pri"]})
+				#     end
+				#   end
+			  
+				# Network
+				# ::Foscam::Model::Network.new(extract_network_parameters(response))
+				# Wifi
 
+				# MSN
 
-			     # 
-			     #   [:daylight_savings_time, :ddns_proxy_port, :ftp_port, :mail_port, :port, :dev2_port, :dev3_port, :dev4_port, :dev5_port, :dev6_port, :dev7_port, :dev8_port, :dev9_port].each do |field|
-			     #     response[field] = response[field].to_i
-			     #   end
-			     #   response[:users] = {}
-			     # 
-			     #         # Device
-			     # 
-			     #         # Users
-			     #   ::Foscam::Model::User::MAX_NUMBER.times do |i|
-			     #     unless response.has_key?("user#{i}_name") && response["user#{i+1}_name"].empty?
-			     #       response[:users] << ::Foscam::Model::User.new({:id => i+1, :username => response["user#{i+1}_name"], :password => response["user#{i+1}_pwd"], :privilage => response["user#{i+1}_pri"]})
-			     #     end
-			     #   end
-			  
-        # Network
-        # ::Foscam::Model::Network.new(extract_network_parameters(response))
-        # Wifi
-			  
-        # MSN
-        
-        # Alarm Config
-        
-        # Ftp server
-        
-        # Mail server
-			  
-      end
-      result
+				# Alarm Config
+
+				# Ftp server
+
+				# Mail server
+
+				end
+				result
 		end
 
 		##
@@ -330,6 +328,7 @@ module Foscam
 		# @return [FalseClass,TrueClass] whether the request was successful.
 		def upgrade_firmware
 			response = @connection.post("upgrade_firmware.cgi")
+			response.success?
 		end
 
 		##
@@ -337,6 +336,7 @@ module Foscam
 		# @return [FalseClass,TrueClass] whether the request was successful.
 		def upgrade_htmls
 			response = @connection.post("upgrade_htmls.cgi")
+			response.success?
 		end
 
 
@@ -352,12 +352,12 @@ module Foscam
 
 		##
 		# Set the datetime of the camera
-		# @param [Hash] params
+		# @param [Foscam::Model::Clock] clock
 		# @return [FalseClass,TrueClass] whether the request was successful.
-		def set_datetime(params)
+		def set_datetime(clock)
 			# Extract the time zone
-			throw "invalid parameter value" if params.has_key?(:ntp_svr) && params[:ntp_svr].length > 64
-			response = @connection.get("set_datetime.cgi?#{params.to_query}")
+			throw "invalid parameter value" unless clock.is_a?(Foscam::Model::Clock)
+			response = @connection.get("set_datetime.cgi?#{clock.to_query}")
 			response.success?
 		end
 
@@ -372,16 +372,8 @@ module Foscam
 		# @option params [String] :pwd8 Password of user8.
 		# @option params [String] :pri8 Privilages of user8.
 		# @return [FalseClass,TrueClass] whether the request was successful.
-		def set_users(params)
-			[:user1, :pwd1, :user2, :pwd2, :user3, :pwd3, :user4, :pwd4, :user5, :pwd5, :user6, :pwd6, :user7, :pwd7, :user8, :pwd8].each do |key|
-				throw "invalid parameter value" if params.has_key?(key) && params[key].length > 12
-			end
-			# if it is one of the matching symbols then set it to the corresponding integer
-			[:pri1, :pri2, :pri3, :pri4, :pri5, :pri6, :pri7, :pri8].each do |key|
-				params[key] = USER_PERMISSIONS_ID[key] if params.has_key?(key) && params[key].is_a?(Symbol)
-			end
-
-			response = @connection.get("set_users.cgi?#{params.to_query}")
+		def set_users(users)
+			response = @connection.get("set_users.cgi?#{ users.map(&:to_query).join("&") }")
 			response.success?
 		end
 
@@ -645,61 +637,61 @@ module Foscam
 			end
 		end
 
-    def self.group_params(params = {})
-      grouped_params = {}
-      params.each do |field, value|
-        
-        next if segment_from_hash(field.to_s, value, /ntp_(.+)/, :ntp, grouped_params)
-        next if segment_from_hash(field.to_s, value, /user(\d)_(.+)/, :users, grouped_params) do |matches, val, h|
-          h.has_key?(matches[1]) ? h[matches[1]].merge!(matches[2].to_sym => val) : h.merge!({matches[1] => {matches[2].to_sym => val}})
-          h
-        end
-        next if segment_from_hash(field.to_s, value, /wifi_(.+)/, :wifi, grouped_params)
-        next if segment_from_hash(field.to_s, value, /pppoe_(.+)/, :pppoe, grouped_params)
-        next if segment_from_hash(field.to_s, value, /upnp_(.+)/, :upnp, grouped_params)
-        next if segment_from_hash(field.to_s, value, /ddns_(.+)/, :ddns, grouped_params)
-        next if segment_from_hash(field.to_s, value, /mail_(.+)/, :mail, grouped_params)
-        next if segment_from_hash(field.to_s, value, /decoder_(.+)/, :decoder, grouped_params)
-        next if segment_from_hash(field.to_s, value, /msn_(.+)/, :msn, grouped_params)
-        
-        next if segment_from_hash(field.to_s, value, /alarm_(.+)/, :alarm, grouped_params) do |matches, val, h|
-          h.merge!(matches.to_a[1..matches.size].join("_").to_sym => val) unless segment_from_hash(matches.to_a[1..matches.size].join("_").to_s, val, /schedule_(.+)/, :schedule, h)
-          h
-        end
-        
-        next if segment_from_hash(field.to_s, value, /ftp_(.+)/, :ftp, grouped_params) do |matches, val, h|
-          h.merge!(matches.to_a[1..matches.size].join("_").to_sym => val) unless segment_from_hash(matches.to_a[1..matches.size].join("_").to_s, val, /schedule_(.+)/, :schedule, h)
-          h
-        end
-        
-        next if segment_from_hash(field.to_s, value, /(ip|mask|gateway|dns|port)/, :network, grouped_params)
-        next if segment_from_hash(field.to_s, value, /(id|sys_ver|app_ver|alias|now|tz|daylight_saving_time)/, :device, grouped_params)
-        
+		def self.group_params(params = {})
+			grouped_params = {}
+			params.each do |field, value|
 
-      end
-      grouped_params
-    end
-    
-    
-    def self.segment_from_hash(str, value, regexp, new_key, dst = {}, &block)
-      # throw TypeError, "Argument 1 [str] is a #{str.class.to_s}. Expected a String." unless str.is_a?(String)
-      # throw TypeError, "Argument 3 [regexp] is a #{regexp.class.to_s}. Expected a Regexp/" unless regexp.is_a?(Regexp)
-      # throw TypeError, "Argument 4 [new_key] is a #{new_key.class.to_s}. Expected a String or Symbol." unless new_key.is_a?(String) || new_key.is_a?(Symbol)
-      # throw TypeError, "Argument 5 [dst] is a #{dst.class.to_s}. Expected a Hash" unless dst.is_a?(Hash)  
-      matches = str.match(regexp)
-      unless matches.nil?
-        if block_given?
-          dst.has_key?(new_key) ? dst[new_key].merge!(block.call(matches, value, dst[new_key])) : dst.merge!(new_key => block.call(matches, value, {}))
-        elsif matches.size > 1
-          dst.has_key?(new_key) ? dst[new_key].merge!(matches.to_a[1..matches.size].join("_").to_sym => value) : dst.merge!(new_key => {matches.to_a[1..matches.size].join("_").to_sym => value})
-        else
-          dst.has_key?(new_key) ? dst[new_key].merge!(str.to_sym => value) : dst.merge!(new_key => {str.to_sym => value})
-        end
-        dst[new_key]
-      else
-        nil
-      end
-    end
+			# next if segment_from_hash(field.to_s, value, /ntp_(.+)/, :ntp, grouped_params)
+			next if segment_from_hash(field.to_s, value, /user(\d)_(.+)/, :users, grouped_params) do |matches, val, h|
+				h.has_key?(matches[1]) ? h[matches[1]].merge!(matches[2].to_sym => val) : h.merge!({matches[1] => {matches[2].to_sym => val}})
+				h
+			end
+			next if segment_from_hash(field.to_s, value, /wifi_(.+)/, :wifi, grouped_params)
+			next if segment_from_hash(field.to_s, value, /pppoe_(.+)/, :pppoe, grouped_params)
+			next if segment_from_hash(field.to_s, value, /upnp_(.+)/, :upnp, grouped_params)
+			next if segment_from_hash(field.to_s, value, /ddns_(.+)/, :ddns, grouped_params)
+			next if segment_from_hash(field.to_s, value, /mail_(.+)/, :mail, grouped_params)
+			next if segment_from_hash(field.to_s, value, /decoder_(.+)/, :decoder, grouped_params)
+			next if segment_from_hash(field.to_s, value, /msn_(.+)/, :msn, grouped_params)
+
+			next if segment_from_hash(field.to_s, value, /alarm_(.+)/, :alarm, grouped_params) do |matches, val, h|
+				h.merge!(matches.to_a[1..matches.size].join("_").to_sym => val) unless segment_from_hash(matches.to_a[1..matches.size].join("_").to_s, val, /schedule_(.+)/, :schedule, h)
+				h
+			end
+
+			next if segment_from_hash(field.to_s, value, /ftp_(.+)/, :ftp, grouped_params) do |matches, val, h|
+				h.merge!(matches.to_a[1..matches.size].join("_").to_sym => val) unless segment_from_hash(matches.to_a[1..matches.size].join("_").to_s, val, /schedule_(.+)/, :schedule, h)
+				h
+			end
+
+			next if segment_from_hash(field.to_s, value, /(ip|mask|gateway|dns|port)/, :network, grouped_params)
+			next if segment_from_hash(field.to_s, value, /(id|sys_ver|app_ver|alias)/, :device, grouped_params)
+			next if segment_from_hash(field.to_s, value, /(ntp_enable|ntp_svr|now|tz|daylight_saving_time)/, :clock, grouped_params)
+
+			end
+			grouped_params
+		end
+
+
+		def self.segment_from_hash(str, value, regexp, new_key, dst = {}, &block)
+			# throw TypeError, "Argument 1 [str] is a #{str.class.to_s}. Expected a String." unless str.is_a?(String)
+			# throw TypeError, "Argument 3 [regexp] is a #{regexp.class.to_s}. Expected a Regexp/" unless regexp.is_a?(Regexp)
+			# throw TypeError, "Argument 4 [new_key] is a #{new_key.class.to_s}. Expected a String or Symbol." unless new_key.is_a?(String) || new_key.is_a?(Symbol)
+			# throw TypeError, "Argument 5 [dst] is a #{dst.class.to_s}. Expected a Hash" unless dst.is_a?(Hash)  
+			matches = str.match(regexp)
+			unless matches.nil?
+				if block_given?
+					dst.has_key?(new_key) ? dst[new_key].merge!(block.call(matches, value, dst[new_key])) : dst.merge!(new_key => block.call(matches, value, {}))
+				elsif matches.size > 1
+					dst.has_key?(new_key) ? dst[new_key].merge!(matches.to_a[1..matches.size].join("_").to_sym => value) : dst.merge!(new_key => {matches.to_a[1..matches.size].join("_").to_sym => value})
+				else
+					dst.has_key?(new_key) ? dst[new_key].merge!(str.to_sym => value) : dst.merge!(new_key => {str.to_sym => value})
+				end
+					dst[new_key]
+			else
+				nil
+			end
+		end
 
 		def handle_boolean(flag)
 			flag ? 1 : 0

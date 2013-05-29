@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://my_username:my_password@192.168.0.117/set_users.cgi?pri5=0&pwd4=pass5&user5=user5
+    uri: http://my_username:my_password@192.168.0.117/set_users.cgi?pri5=0&pwd5=pass5&user5=user5
     body:
       encoding: US-ASCII
       string: ''
